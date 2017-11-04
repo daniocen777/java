@@ -1,0 +1,19 @@
+<%-- any content can be specified here e.g.: --%>
+<%@ page pageEncoding="UTF-8" %>
+<ul class="menu cf">    
+    <li>
+        <a href="">Tipo de Evento</a>
+        <ul class="submenu">
+            <li><a href="#" onclick="irTipoEvento();">Ver Tipos de Eventos</a></li>
+            <li><a href="#" onclick="irTipoEventosIns();">Nuevo Tipo de Evento</a></li>
+        </ul>			
+    </li>
+    <li>
+        <a href="">Evento</a>
+        <ul class="submenu">
+            <li><a href="#" onclick="irEventos();">Ver Eventos</a></li>
+            <li><a href="#" onclick="irEventosIns();">Nuevo Evento</a></li>
+        </ul>			
+    </li>
+
+</ul>
