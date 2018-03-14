@@ -1,7 +1,7 @@
 $(function () {
     //activos();
     activoQry();
-    activosPags();
+    //activosPags();
 });
 
 function activoQry() {
@@ -27,10 +27,12 @@ function activoQry() {
                     var idactivo = data[i].idactivo;
                     var nombact = data[i].nombact;
                     var tipoact = data[i].tipoact;
+                    //var prueba = data[i].prueba;
 
                     body += "<tr>"
                             + "<td>" + nombact + "</td>"
                             + "<td>" + tipoact + "</td>"
+                            //+ "<td style='color: #B94A48; font-weight: bold;' >" + prueba + "</td>"
                             + "<th><input type='radio' name='idactivo_upd' value='" + idactivo + "'/></th>"
                             + "<th><input type='checkbox' name='idactivo_del' value='" + idactivo + "'/></th>"
                             + "</tr>";
@@ -92,7 +94,6 @@ function activoIns() {
                             $("#msg_ok").css("visibility", "visible");
 
                             activoQry();
-                            activosPags();
                             $("#dins").dialog("close");
                         }
                     }
@@ -148,7 +149,6 @@ function activossDel() {
                                 $("#msg_war").html(war);
                                 $("#msg_war").css("visibility", "visible");
                                 activoQry();
-                                activosPags();
                                 $("#msg_error").css("visibility", "hidden");
                             }
 
@@ -296,73 +296,74 @@ function activoPorNombreQry() {
     });
 }
 
-function activosPags() {
-    $.ajax({
-        url: "../../Activo",
-        dataType: "json",
-        type: "post",
-        data: {
-            accion: "CBO"
-        },
-        success: function (data) {
-            var msg = data[0].msg;
-            var numero = parseInt(msg);
-            var html = "";
-
-            if ($.trim(numero).length === 0) {
-                alert("No hay nada");
-
-            } else {
-                for (var i = 1; i <= numero; ++i) {
-                    html += "<option value=\"" + i + "\">" + i + "</option>";
-                }
-            }
-            $("#cbo").html(html);
-        }
-    });
-}
-
-// Nuevo listado con paginadores 
-function activos() {
-    var num = parseInt($("#cbo").val());
-    $.ajax({
-        url: "../../Activo",
-        dataType: "json",
-        type: "post",
-        data: {
-            accion: "QRY",
-            numPag: num 
-        },
-        success: function (data) {
-            var msg = data[0].msg;
-
-            if ($.trim(msg).length !== 0) {
-                $("#msg_error").text(msg);
-                $("#msg_error").css("visibility", "visible");
-                $("#activoQry").html("");
-
-            } else {
-                var body = "";
-
-                for (var i = 1; i < data.length; ++i) {
-                    var idactivo = data[i].idactivo;
-                    var nombact = data[i].nombact;
-                    var tipoact = data[i].tipoact;
-
-                    body += "<tr>"
-                            + "<td>" + nombact + "</td>"
-                            + "<td>" + tipoact + "</td>"
-                            + "<th><input type='radio' name='idactivo_upd' value='" + idactivo + "'/></th>"
-                            + "<th><input type='checkbox' name='idactivo_del' value='" + idactivo + "'/></th>"
-                            + "</tr>";
-                }
-
-                $("#activoQry").html(body);
-                $("#msg_error").css("visibility", "hidden"); // si Ok, limpia
-            }
-        }
-    });
-}
+//function activosPags() {
+//    $.ajax({
+//        url: "../../Activo",
+//        dataType: "json",
+//        type: "post",
+//        data: {
+//            accion: "CBO"
+//        },
+//        success: function (data) {
+//            var msg = data[0].msg;
+//            var numero = parseInt(msg);
+//            var html = "";
+//
+//            if ($.trim(numero).length === 0) {
+//                alert("No hay nada");
+//
+//            } else {
+//                for (var i = 0; i < numero; ++i) {
+//                    html += "<option value=\"" + i + "\">" + (i + 1) + "</option>";
+//                }
+//            }
+//            $("#cbo").html(html);
+//        }
+//    });
+//}
+//
+//// Nuevo listado con paginadores 
+//function activos() {
+//    var num = parseInt($("#cbo").val());
+//    //alert(num);
+//    $.ajax({
+//        url: "../../Activo",
+//        dataType: "json",
+//        type: "post",
+//        data: {
+//            accion: "QRY",
+//            numPag: num
+//        },
+//        success: function (data) {
+//            var msg = data[0].msg;
+//
+//            if ($.trim(msg).length !== 0) {
+//                $("#msg_error").text(msg);
+//                $("#msg_error").css("visibility", "visible");
+//                $("#activoQry").html("");
+//
+//            } else {
+//                var body = "";
+//
+//                for (var i = 1; i < data.length; ++i) {
+//                    var idactivo = data[i].idactivo;
+//                    var nombact = data[i].nombact;
+//                    var tipoact = data[i].tipoact;
+//
+//                    body += "<tr>"
+//                            + "<td>" + nombact + "</td>"
+//                            + "<td>" + tipoact + "</td>"
+//                            + "<th><input type='radio' name='idactivo_upd' value='" + idactivo + "'/></th>"
+//                            + "<th><input type='checkbox' name='idactivo_del' value='" + idactivo + "'/></th>"
+//                            + "</tr>";
+//                }
+//
+//                $("#activoQry").html(body);
+//                $("#msg_error").css("visibility", "hidden"); // si Ok, limpia
+//            }
+//        }
+//    });
+//}
 
 
 

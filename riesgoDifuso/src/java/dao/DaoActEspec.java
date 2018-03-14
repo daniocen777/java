@@ -25,6 +25,9 @@ public interface DaoActEspec {
 
     public String actEspecUpd(ActEspec actEspec); // Actualiza el actEspec escogido
 
+    // Llenar comboBox
+    public List<Object[]> activoEspecCbo();
+
     // Método que devuelve un mensaje de error para el listar
     public String getMessage();
 }

@@ -58,7 +58,7 @@ public class ActEspecValidator {
         }
 
         if (nombactespec == null || nombactespec.trim().length() == 0) {
-            message.add("Nombre de activo es requerido");
+            message.add("Nombre del activo específico es requerido");
         } else if (nombactespec.length() <= 2 || nombactespec.length() > 50) {
             message.add("Nombre de activo [3; 50] caracteres");
         }
@@ -132,7 +132,7 @@ public class ActEspecValidator {
                 result = jSon.forMsg(daoActEspec.getMessage());
             }
         }
-        combos();
+        //combos();
         return result;
     }
 

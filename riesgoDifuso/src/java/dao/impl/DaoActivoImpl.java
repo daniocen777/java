@@ -41,9 +41,15 @@ public class DaoActivoImpl implements DaoActivo {
             while (rs.next()) {
                 Object[] fil = new Object[3];
 
+                //Activo activo = new Activo();
+                
                 fil[0] = rs.getInt(1);
+                //activo.setIdactivo(rs.getInt(1));
                 fil[1] = rs.getString(2);
+                //activo.setNombact(rs.getString(2));
                 fil[2] = rs.getString(3);
+                //activo.setTipoact(rs.getString(3));
+                //fil[3] = activo.getPrueba();
 
                 list.add(fil);
             }

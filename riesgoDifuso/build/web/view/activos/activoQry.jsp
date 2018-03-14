@@ -32,11 +32,11 @@
                 <%@include file="../../WEB-INF/jspf/menuadmin.jspf" %>
             </div>
 
-            <form class="parainfo">
+            <form class="parainfo" style="float: left">
                 <button type="button" onclick="activoIns();"><span class="ui-icon ui-icon-circle-plus"></span> Agregar</button>
             </form>
 
-            <form class="parainfo">
+            <form class="parainfo" style="float: left">
                 <span class="ui-icon ui-icon-search"></span>
                 <input type="text" id="nombact_find"
                        maxlength="200" style="width: 250px" 
@@ -49,8 +49,8 @@
                 <table class="parainfo" style="margin: auto;width: 860px">
                     <thead>
                         <tr>
-                            <td>Activo</td>
-                            <td>Tipo de activo</td>
+                            <td>ACTIVO</td>
+                            <td>TIPO DE ACTIVO</td>
                             <th class="crud">
                                 <a class="upd" href="#" onclick="activoUpd();"
                                    title="Actualizar Registro"><span></span></a>
@@ -58,11 +58,6 @@
                             <th class="crud">
                                 <a class="del" href="#" onclick="activossDel();"
                                    title="Retirar Registro"><span></span></a>
-                            </th>
-                            <th style="width: 70px">
-                                <form class="parainfo" style="margin: 0px">
-                                    <select id="cbo" onchange="activos();"></select>
-                                </form>
                             </th>
 
                         </tr>

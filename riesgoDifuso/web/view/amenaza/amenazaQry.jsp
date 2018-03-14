@@ -9,7 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Amenaza</title>
         <link href="../../jq/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
         <link href="../../parainfo/form.css" rel="stylesheet" type="text/css"/>
         <link href="../../parainfo/table.css" rel="stylesheet" type="text/css"/>
@@ -33,12 +33,12 @@
             </div>
 
 
-            <form class="parainfo">
+            <form class="parainfo" style="float: left">
                 <button type="button" onclick="amenazaIns();"><span class="ui-icon ui-icon-circle-plus"></span> Agregar</button>
             </form>
 
             <!-- Buscar por nombre de amenaza -->
-            <form class="parainfo">
+            <form class="parainfo" style="float: left">
                 <span class="ui-icon ui-icon-search"></span>
                 <input type="text" id="nombamen_find"
                        maxlength="200" style="width: 250px" 
@@ -50,7 +50,7 @@
                 <table class="parainfo" style="margin: auto;width: 860px">
                     <thead>
                         <tr>
-                            <td>Amenaza</td>
+                            <td>AMENAZA</td>
                             <th class="crud">
                                 <a class="upd" href="#" onclick="amenazaUpd();"
                                    title="Actualizar Registro"><span></span></a>
@@ -87,7 +87,7 @@
                                     <td>Amenaza</td>
                                     <td>
                                         <input type="text" id="nombamen_ins" 
-                                               maxlength="200" style="width: 250px"/>
+                                               maxlength="200" style="width: 290px"/>
                                     </td>
                                 </tr>
                             </table>

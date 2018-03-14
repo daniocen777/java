@@ -1,6 +1,6 @@
 <%-- 
-    Document   : activoQry
-    Created on : 05/01/2018, 03:23:59 PM
+    Document   : actEspecAmenQry
+    Created on : 14/02/2018, 08:01:00 PM
     Author     : DANIEL
 --%>
 
@@ -9,7 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Activos</title>
+        <title>Activos VS Amenazas</title>
         <link href="../../jq/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
         <link href="../../parainfo/form.css" rel="stylesheet" type="text/css"/>
         <link href="../../parainfo/table.css" rel="stylesheet" type="text/css"/>
@@ -23,7 +23,7 @@
         <script src="../../parainfo/table.js" type="text/javascript"></script>
         <script src="../../parainfo/message.js" type="text/javascript"></script>
         <script src="../../jq/menu/menu.js" type="text/javascript"></script>
-        <script src="../../js/main.js" type="text/javascript"></script>
+        <script src="../../js/actEspecAmen.js" type="text/javascript"></script>
         <script src="../../js/mensajes.js" type="text/javascript"></script>
     </head>
     <body>
@@ -33,40 +33,50 @@
             </div>
 
             <form class="parainfo" style="float: left">
-                <button type="button" onclick="activoIns();"><span class="ui-icon ui-icon-circle-plus"></span> Agregar</button>
+                <button type="button" onclick="actEspecAmenIns();"><span class="ui-icon ui-icon-circle-plus"></span> Agregar</button>
             </form>
 
             <form class="parainfo" style="float: left">
                 <span class="ui-icon ui-icon-search"></span>
                 <input type="text" id="nombact_find"
                        maxlength="200" style="width: 250px" 
-                       placeholder="Buscar activo" 
-                       onkeyup="activoPorNombreQry();"/>
+                       placeholder="Buscar activo específico" 
+                       onkeyup=""/>
             </form>
-
 
             <div id="m_body">
                 <table class="parainfo" style="margin: auto;width: 860px">
                     <thead>
                         <tr>
-                            <td>ACTIVO</td>
-                            <td>TIPO DE ACTIVO</td>
                             <th class="crud">
-                                <a class="upd" href="#" onclick="activoUpd();"
+                                <a class="qry" href="../activos/activoQry.jsp" title="Ver Activos"><span></span></a>
+                            </th>                            
+                            <td>ACTIVO</td>
+                            <th class="crud">
+                                <a class="qry" href="../actEspec/actEspecQry.jsp" title="Ver Activos Espec."><span></span></a>
+                            </th>
+                            <td>ACTIVO ESPECÍFICO</td>
+                            <th class="crud">
+                                <a class="qry" href="../amenaza/amenazaQry.jsp" title="Ver Amenazas"><span></span></a>
+                            </th>
+                            <td>AMENAZA</td>
+                            <th class="crud">
+                                <a class="upd" href="#" onclick=""
                                    title="Actualizar Registro"><span></span></a>
                             </th>
                             <th class="crud">
-                                <a class="del" href="#" onclick="activossDel();"
+                                <a class="del" href="#" onclick="actEspecAmenDel();"
                                    title="Retirar Registro"><span></span></a>
                             </th>
 
                         </tr>
                     </thead>
-                    <tbody id="activoQry"></tbody>
+                    <tbody id="activoEspecAmenQry"></tbody>
                 </table>
 
                 <%-- para mensajes en JSP --%>
-                <div id="msg_error" onmouseover="cerrarmensajes();" class="msg_error ui-state-error ui-corner-all"></div>
+                <div id="msg_error" 
+                     class="msg_error ui-state-error ui-corner-all"></div>
 
                 <%-- para mensajes en dialogo --%>
                 <div style="display: none">
@@ -79,62 +89,27 @@
 
                 <%-- INICIO - Insertar  --%>
                 <div style="display: none">
-                    <div id="dins" title="Nuevo registro">
+                    <div id="dins" title="Nuevo registro" style="width: 900px; height: 900px">
                         <form class="parainfo">
                             <table>
                                 <tr>
                                     <td>Activo</td>
-                                    <td>
-                                        <input type="text" id="nombact_ins" 
-                                               maxlength="200" style="width: 250px"/>
-                                    </td>
+                                    <td><select id="activosCbo" onchange="activEspecCbo();" style="width: 350px"></select></td>
                                 </tr>
                                 <tr>
-                                    <td>Tipo de Activo</td>
-                                    <td>
-                                        <select id="tipoact_ins" style="width: 260px">
-                                            <option value="HARDWARE">HARDWARE</option>
-                                            <option value="SOFTWARE">SOFTWARE</option>
-                                        </select>
-                                    </td>
+                                    <td>Activo Espec.</td>
+                                    <td><select id="activosEspecCbo" style="width: 350px"></select></td>
+                                </tr>
+                                <tr>
+                                    <td>Amenaza</td>
+                                    <td><select id="amenazaCbo" style="width: 350px"></select></td>
                                 </tr>
                             </table>
                         </form>
-                        <div id="ins_error" 
-                             class="msg_error ui-state-error ui-corner-all"></div>
+                        <div id="ins_error" class="msg_error ui-state-error ui-corner-all"></div>
                     </div>
                 </div>
                 <%-- FIN - Insertar  --%>
-
-                <%-- INICIO - Actualizar  --%>
-                <div style="display: none">
-                    <div id="dupd" title="Actualizar registro">
-                        <form class="parainfo">
-                            <input type="hidden" id="idactivo_upd"/>
-                            <table>
-                                <tr>
-                                    <td>Activo</td>
-                                    <td>
-                                        <input type="text" id="nombact_upd" 
-                                               maxlength="200" style="width: 250px"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Tipo de Activo</td>
-                                    <td>
-                                        <select id="tipoact_upd" style="width: 260px">
-                                            <option value="HARDWARE">HARDWARE</option>
-                                            <option value="SOFTWARE">SOFTWARE</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                            </table>
-                        </form>
-                        <div id="upd_error" 
-                             class="msg_error ui-state-error ui-corner-all"></div>
-                    </div>
-                </div>
-                <%-- FIN- Actualizar  --%>
 
             </div>
         </div>

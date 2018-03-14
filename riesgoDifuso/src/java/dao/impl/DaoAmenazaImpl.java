@@ -195,7 +195,34 @@ public class DaoAmenazaImpl implements DaoAmenaza {
 
     @Override
     public List<Object[]> amenazaCbo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Object[]> list = null;
+        sql.delete(0, sql.length())
+                .append("SELECT ")
+                .append("idamenaza,")
+                .append("nombamen ")
+                .append("FROM amenaza ")
+                .append("ORDER BY nombamen");
+
+        try (Connection cn = db.getConnection();
+                PreparedStatement ps = cn.prepareStatement(sql.toString());
+                ResultSet rs = ps.executeQuery()) {
+
+            list = new LinkedList<>();
+
+            while (rs.next()) {
+                Object[] fil = new Object[2];
+
+                fil[0] = rs.getInt(1);
+                fil[1] = rs.getString(2);
+
+                list.add(fil);
+            }
+
+        } catch (SQLException e) {
+            message = e.getMessage();
+        }
+
+        return list;
     }
 
     @Override

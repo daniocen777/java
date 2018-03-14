@@ -32,12 +32,12 @@
                 <%@include file="../../WEB-INF/jspf/menuadmin.jspf" %>
             </div>
 
-            <form class="parainfo">
+            <form class="parainfo" style="float: left">
                 <button type="button" onclick="actEspecIns();"><span class="ui-icon ui-icon-circle-plus"></span> Agregar</button>
             </form>
 
 
-            <form class="parainfo">
+            <form class="parainfo" style="float: left">
                 <span class="ui-icon ui-icon-search"></span>
                 <input type="text" id="nombactespec_find"
                        maxlength="200" style="width: 250px" 
@@ -52,8 +52,8 @@
                             <th class="crud">
                                 <a class="qry" href="../activos/activoQry.jsp" title="Ver Activos"><span></span></a>
                             </th>
-                            <td>Activo</td>
-                            <td>Activo Espec</td>
+                            <td>ACTIVO</td>
+                            <td>ACTIVO ESPECÍFICO</td>
                             <th class="crud">
                                 <a class="upd" href="#" onclick="actEspecUpd();"
                                    title="Actualizar Registro"><span></span></a>
@@ -120,7 +120,9 @@
                                 <tr>
                                     <td>Activo</td>
                                     <td>
-                                        <select id="actEspecCbo_upd" style="width: 250px"></select>
+                                        <select id="actEspecCbo_upd" style="width: 250px">
+                                            <option value=""></option>
+                                        </select>
                                     </td>
                                 </tr>
                                 <tr>

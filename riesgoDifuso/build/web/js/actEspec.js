@@ -61,7 +61,6 @@ function actEspecCbo() {
 
             } else {
                 var option = "";
-                var option = "";
 //                $(data).find('op').each(function () {
 //                    var text = $(this).text();
 //                    var value = $(this).attr('id');
@@ -71,6 +70,7 @@ function actEspecCbo() {
                 for (var i = 1; i < data.length; ++i) {
                     var id = data[i].id;
                     var opt = data[i].opt;
+
                     option += "<option value=\"" + id + "\">" + opt + "</option>";
                 }
                 $("#actEspecCbo").html(option);
@@ -125,7 +125,7 @@ function actEspecIns() {
                             $("#msg_war").css("visibility", "hidden");
                             $("#msg_alert").html("");
                             $("#msg_alert").css("visibility", "hidden");
-                            var ok = "<p>" + "Se agregó nueva amenaza" + "</p>";
+                            var ok = "<p>" + "Se agregó nuevo activo específico" + "</p>";
                             $("#msg_ok").html(ok);
                             $("#msg_ok").css("visibility", "visible");
                             activoEspecQry();
@@ -213,7 +213,6 @@ function actEspecUpd() {
             },
             success: function (data) {
                 var msg = data[0].msg;
-                var ok = 'Actualizado correctamente';
 
                 if ($.trim(msg).length !== 0) {
                     $("#msg_error").text(msg);

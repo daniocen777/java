@@ -23,10 +23,11 @@ public class ActivoValidator {
     public StringBuilder activoQry() {
         StringBuilder result;
         List<Object[]> list = daoActivo.activoQry();
+
         if (list == null) {
             result = jSon.forMsg(daoActivo.getMessage());
         } else {
-            String[] titulos = {"idactivo", "nombact", "tipoact"};
+            String[] titulos = {"idactivo", "nombact", "tipoact"}; // , "prueba"
             result = jSon.forQry(titulos, list);
         }
         return result;

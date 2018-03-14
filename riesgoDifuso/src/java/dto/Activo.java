@@ -33,4 +33,9 @@ public class Activo {
         this.tipoact = tipoact;
     }
 
+    // Método de prueba que devuelva algo para mostrar en la tabla
+//    public String getPrueba() {
+//        return (this.tipoact.equals("HARDWARE")) ? "ESTE ES UN HARDWARE" : "ESTE ES UN SOFTWARE";
+//    }
+
 }

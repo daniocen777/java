@@ -108,7 +108,7 @@ public class DaoActEspecImpl implements DaoActEspec {
             cn.setAutoCommit(true);
 
         } catch (SQLException e) {
-            message = e.getMessage() + " -- " + "Error de llave foránea con activo específico";
+            message = e.getMessage() + " -- " + "ERROR DE LLAVE FORÁNEA" + " -- ";
         }
 
         return message;
@@ -244,6 +244,40 @@ public class DaoActEspecImpl implements DaoActEspec {
         } catch (SQLException e) {
             message = e.getMessage();
         }
+        return list;
+    }
+
+    @Override
+    public List<Object[]> activoEspecCbo() {
+        List<Object[]> list = null;
+        sql.delete(0, sql.length())
+                .append("SELECT ")
+                .append("activo.idactivo,")
+                .append("actespec.idactespec, ")
+                .append("actespec.nombactespec ")
+                .append("FROM actespec ")
+                .append("INNER JOIN activo ON actespec.idactivo = activo.idactivo");
+
+        try (Connection cn = db.getConnection();
+                PreparedStatement ps = cn.prepareStatement(sql.toString());
+                ResultSet rs = ps.executeQuery()) {
+
+            list = new LinkedList<>();
+
+            while (rs.next()) {
+                Object[] fil = new Object[3];
+
+                fil[0] = rs.getInt(1);
+                fil[1] = rs.getInt(2);
+                fil[2] = rs.getString(3);
+
+                list.add(fil);
+            }
+
+        } catch (SQLException e) {
+            message = e.getMessage();
+        }
+
         return list;
     }
 

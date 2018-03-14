@@ -39,10 +39,20 @@
         </li>
 
         <li>
+            <a href="#" class="parent"><span>Activos VS Amenazas</span></a>
+            <div>
+                <ul>
+                    <li><a href="../../view/actEspecAmen/actEspecAmenQry.jsp"><span>Proceso de Activos y Amenazas</span></a></li>
+                </ul>
+            </div>
+        </li>
+
+        <li>
             <a href="#" class="parent"><span>Riesgos</span></a>
             <div>
                 <ul>
-                    <li><a href="#"><span>Proceso Riesgos</span></a></li>
+                    <li><a href="../../view/cuantRiesgo/cuantRiesgoQry.jsp"><span>Proceso Riesgos</span></a></li>
+                    <li><a href="../../view/estadisticas/index.jsp"><span>Estadísticas</span></a></li>
                 </ul>
             </div>
         </li>
