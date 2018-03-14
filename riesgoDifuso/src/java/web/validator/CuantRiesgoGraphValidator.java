@@ -21,7 +21,7 @@ public class CuantRiesgoGraphValidator {
         this.daoCuantRiesgoImpl = new DaoCuantRiesgoImpl();
     }
 
-    // Método para generar los datos de la gráfica
+    // Método para generar los datos de la gráfica circular en 3D
     public PieDataset generaDatos() {
         List<Object[]> list = daoCuantRiesgoImpl.cuantRiesgoGraph();
         Integer contadorB = 0;
