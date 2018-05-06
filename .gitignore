@@ -20,3 +20,6 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/riesgoDifuso_v2/nbproject/private/
+/riesgoDifuso_v2/dist/
+/riesgoDifuso_v2/build/
