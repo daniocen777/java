@@ -15,7 +15,8 @@
     <body>
         <div id="m_main">
             <div id="m_top">
-                Usuario: ${usuarios.nombres} ${usuarios.apellidos}
+                <h3>Usuario: ${usuarios.nombres} ${usuarios.apellidos}</h3>
+
             </div>
 
             <div id="m_menu">
