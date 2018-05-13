@@ -3,8 +3,8 @@ package dto;
 public class Activo {
 
     private Integer idactivo;
-    private String nombact;
-    private String tipoact;
+    private String nombactivo;
+    private String tipo;
 
     public Activo() {
     }
@@ -17,25 +17,20 @@ public class Activo {
         this.idactivo = idactivo;
     }
 
-    public String getNombact() {
-        return nombact;
+    public String getNombactivo() {
+        return nombactivo;
     }
 
-    public void setNombact(String nombact) {
-        this.nombact = nombact;
+    public void setNombactivo(String nombactivo) {
+        this.nombactivo = nombactivo;
     }
 
-    public String getTipoact() {
-        return tipoact;
+    public String getTipo() {
+        return tipo;
     }
 
-    public void setTipoact(String tipoact) {
-        this.tipoact = tipoact;
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
-
-    // Método de prueba que devuelva algo para mostrar en la tabla
-//    public String getPrueba() {
-//        return (this.tipoact.equals("HARDWARE")) ? "ESTE ES UN HARDWARE" : "ESTE ES UN SOFTWARE";
-//    }
 
 }
