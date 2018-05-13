@@ -61,7 +61,25 @@ public class DaoActivoImpl extends Dao implements DaoActivo {
 
     @Override
     public String activoIns(Activo activo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        sql.delete(0, sql.length())
+                .append("INSERT INTO activo(")
+                .append("nombactivo,")
+                .append("tipo")
+                .append(") VALUES(?,?)");
+        try (Connection cn = db.getConnection();
+                PreparedStatement ps = cn.prepareStatement(sql.toString())) {
+
+            // Colocar los parámetros antes de ejecutar
+            ps.setString(1, activo.getNombactivo());
+            ps.setString(2, activo.getTipo());
+
+            // Al ejecutar, retorna un entero
+            int ctos = ps.executeUpdate(); // Para insert, delete y update
+            message = (ctos != 0) ? "ok" : "0 filas afectadas";
+        } catch (SQLException e) {
+            message = e.getMessage();
+        }
+        return message;
     }
 
     @Override
