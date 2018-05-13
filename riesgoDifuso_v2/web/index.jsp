@@ -1,9 +1,3 @@
-<%-- 
-    Document   : index
-    Created on : 05/05/2018, 09:47:24 PM
-    Author     : DANIEL
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 
@@ -15,13 +9,19 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>parainformaticos.com</title>
-        <link href="jq/jquery-ui.min.css" type="text/css" rel="stylesheet"/>
-        <link href="css/main.css" type="text/css" rel="stylesheet"/>
+        <link href="jq/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
+        <link href="parainfo/message.css" rel="stylesheet" type="text/css"/>
+        <link href="parainfo/table.css" rel="stylesheet" type="text/css"/>
         <link href="parainfo/form.css" type="text/css" rel="stylesheet"/>
+        <link href="css/main.css" rel="stylesheet" type="text/css"/>
 
-        <script src="jq/jquery-2.1.4.min.js" type="text/javascript"></script>
+        <script src="jq/jquery-3.2.1.min.js" type="text/javascript"></script>
         <script src="jq/jquery-ui.min.js" type="text/javascript"></script>
+        <script src="parainfo/message.js" type="text/javascript"></script>
+        <script src="parainfo/table.js" type="text/javascript"></script>
         <script src="parainfo/form.js" type="text/javascript"></script>
+
+
     </head>
     <body>
         <form class="parainfo" action="Usuarios" method="post"
@@ -47,7 +47,7 @@
                         <td><label for="password">Password</label></td>
                         <td>
                             <input type="password" name="password" 
-                                   maxlength="50" id="usuario"
+                                   maxlength="50" id="password"
                                    value="${usuarios.password}" 
                                    style="width: 200px"/>
                         </td>
@@ -60,10 +60,11 @@
                             <button type="submit" 
                                     class="submit">Autenticarse</button>
                             <br/>
+                            <br/>
                             <span style="color: #777">
                                 <img src="images/i-parainformaticos.gif" 
                                      style="vertical-align: middle"/>
-                                parainformaticos.com<br/>
+                                danicode.com<br/>
                             </span>
                         </td>
                     </tr>
@@ -80,5 +81,4 @@
         </c:if>
     </body>
 </html>
-
 
