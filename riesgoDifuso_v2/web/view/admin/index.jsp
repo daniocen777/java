@@ -6,10 +6,11 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        <link href="../../css/main.css" type="text/css" rel="stylesheet"/>
+        
+        <link href="../../css/main.css" rel="stylesheet" type="text/css"/>
         <link href="../../jq/menu/menu.css" rel="stylesheet" type="text/css"/>
 
-        <script src="../../jq/jquery-2.1.4.min.js" type="text/javascript"></script>
+        <script src="../../jq/jquery-3.2.1.min.js" type="text/javascript"></script>
         <script src="../../jq/menu/menu.js" type="text/javascript"></script>
     </head>
     <body>
