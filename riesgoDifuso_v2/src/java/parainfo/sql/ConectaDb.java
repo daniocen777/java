@@ -29,7 +29,7 @@ public class ConectaDb  {
     public ConectaDb() {
     }
     
-    private final String url = "jdbc:mysql://localhost:3306/riesgoDB";
+    private final String url = "jdbc:mysql://localhost:3306/risk";
     private final String driver = "com.mysql.jdbc.Driver";
     private final String user = "root";
     private final String password = "";
