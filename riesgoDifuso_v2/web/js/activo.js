@@ -1,5 +1,5 @@
 $(function () {
-
+    activoQry();
 });
 
 // Función para listar los activos
@@ -39,6 +39,61 @@ function activoQry() {
 
                 $("#activoQry").html(body);
                 $("#msg_error").css("visibility", "hidden"); // si Ok, limpia
+            }
+        }
+    });
+}
+
+// Función para insertar activo
+function activoIns() {
+    $("#nombactivo_ins").val("");
+    $("#ins_error").html("");
+    $("#ins_error").css("visibility", "hidden");
+
+    $("#dins").dialog({
+        modal: true,
+        width: 420,
+        buttons: {
+            "Cancelar": function () {
+                $(this).dialog("close");
+            },
+            "Enviar Datos": function () {
+                $.ajax({
+                    url: "../../Activo",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        accion: "INS",
+                        nombactivo: $("#nombactivo_ins").val(),
+                        tipo: $("#tipo_ins").val()
+                    },
+                    success: function (error) {
+                        var msg = error[0].msg;
+
+                        if ($.trim(msg).length !== 0 && msg !== 'ok') {
+                            var ctos = error.length;
+
+                            var msg = "<ul>";
+                            for (var i = 0; i < ctos; ++i) {
+                                msg += "<li>" + error[i].msg + "</li>";
+                            }
+                            msg += "</ul>";
+
+                            $("#ins_error").html(msg);
+                            $("#ins_error").css("visibility", "visible");
+
+                        } else {
+                            var ok = "<div class='alert alert-success alert-dismissable'>";
+                            ok += "El registro se agregó correctamente";
+                            ok += "</div>";
+                            $("#ins_msg").html("");
+                            $("#msg_ok").html(ok);
+                            activoQry();
+                            $("#dins").dialog("close");
+
+                        }
+                    }
+                });
             }
         }
     });
