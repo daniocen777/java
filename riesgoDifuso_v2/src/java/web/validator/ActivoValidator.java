@@ -1,5 +1,6 @@
 /*
  Validador para la clase Activo ==> DaoActivo
+ Clase que comunica con el servlet
  */
 package web.validator;
 
@@ -27,6 +28,7 @@ public class ActivoValidator {
         this.daoActivo = new DaoActivoImpl();
     }
 
+    // Método para listar activos
     public StringBuilder activoQry() {
         StringBuilder result;
         List<Object[]> list = daoActivo.activoQry();
@@ -39,6 +41,7 @@ public class ActivoValidator {
         return result;
     }
 
+    // Método para insertar o actualizar activos
     public StringBuilder activoIns(boolean upd) {
         List<String> message = new LinkedList<>();
         StringBuilder result = null;
@@ -83,6 +86,22 @@ public class ActivoValidator {
             result = jSon.forMsg(message);
         }
 
+        return result;
+    }
+
+    // Método para eliminar activo
+    public StringBuilder activoDel() {
+        StringBuilder result = null;
+        List<Integer> ids = DeString.ids(request.getParameter("ids"));
+        if (ids == null) {
+            result = jSon.forMsg("Lista de ID(s) incorrecta");
+        } else {
+            String msg = daoActivo.activoDel(ids);
+
+            if (msg != null) {
+                result = jSon.forMsg(msg);
+            }
+        }
         return result;
     }
 }
