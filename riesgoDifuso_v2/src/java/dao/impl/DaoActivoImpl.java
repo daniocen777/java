@@ -79,7 +79,38 @@ public class DaoActivoImpl extends Dao implements DaoActivo {
 
     @Override
     public String activoDel(List<Integer> ids) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        sql.delete(0, sql.length())
+                .append("DELETE FROM activo WHERE idactivo = ?");
+        try (Connection cn = db.getConnection();
+                PreparedStatement ps = cn.prepareStatement(sql.toString())) {
+            // Se necesita el concepto de transacción, ya que no eliminará si hay algún "ssid" errado
+            // 1 ==> Inicio
+            cn.setAutoCommit(false); // No afectar a la BD
+            // 3 ==> Flag para saber si es correcto
+            boolean ok = true;
+            for (Integer id : ids) {
+                ps.setInt(1, id);
+                int ctos = ps.executeUpdate(); // Ejecutar
+                if (ctos == 0) {
+                    ok = false;
+                    message = "ID " + id + " no encontrado";
+                    break;
+                }
+            }
+            if (ok) {
+                cn.commit();
+                message = "ok";
+            } else {
+                cn.rollback();
+            }
+
+            // 2 ==> Final 
+            cn.setAutoCommit(true);   // Afectar a la BD
+
+        } catch (SQLException e) {
+            message = e.getMessage() + " -- " + "Error de llave foránea con activo específico";
+        }
+        return message;
     }
 
     @Override
