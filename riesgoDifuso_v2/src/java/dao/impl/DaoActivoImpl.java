@@ -115,12 +115,59 @@ public class DaoActivoImpl extends Dao implements DaoActivo {
 
     @Override
     public Activo activoGet(Integer idactivo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Activo activo = null;
+        sql.delete(0, sql.length())
+                .append("SELECT ")
+                .append("idactivo,")
+                .append("nombactivo,")
+                .append("tipo ")
+                .append("FROM activo ")
+                .append("WHERE idactivo = ?");
+        try (Connection cn = db.getConnection();
+                PreparedStatement ps = cn.prepareStatement(sql.toString())) {
+            // Enviar el parámetro antes de ejecutar
+            ps.setInt(1, idactivo);
+            // Segundo try  
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    activo = new Activo();
+                    activo.setIdactivo(rs.getInt(1));
+                    activo.setNombactivo(rs.getString(2));
+                    activo.setTipo(rs.getString(3));
+                } else {
+                    message = "Activo no encontrado";
+                }
+            } catch (SQLException e) {
+                message = e.getMessage();
+            }
+        } catch (SQLException e) {
+            message = e.getMessage();
+        }
+        return activo;
     }
 
     @Override
     public String activoUpd(Activo activo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        sql.delete(0, sql.length())
+                .append("UPDATE activo SET ")
+                .append("nombactivo = ?,")
+                .append("tipo = ? ")
+                .append("WHERE idactivo = ?");
+
+        try (Connection cn = db.getConnection();
+                PreparedStatement ps = cn.prepareStatement(sql.toString())) {
+            // Antes de ejecutar, enviar los parámetros
+            ps.setString(1, activo.getNombactivo());
+            ps.setString(2, activo.getTipo());
+            ps.setInt(3, activo.getIdactivo());
+
+            int ctos = ps.executeUpdate(); // Retorna entero
+            message = (ctos != 0) ? "ok" : "0 filas afectadas";
+
+        } catch (SQLException e) {
+            message = e.getMessage();
+        }
+        return message;
     }
 
     @Override
