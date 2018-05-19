@@ -18,11 +18,11 @@ import parainfo.json.JSon;
  * @author DANIEL
  */
 public class ActivoValidator {
-    
+
     private final HttpServletRequest request;
     JSon jSon = new JSon();
     private final DaoActivo daoActivo;
-    
+
     public ActivoValidator(HttpServletRequest request) {
         this.request = request;
         this.daoActivo = new DaoActivoImpl();
@@ -42,50 +42,50 @@ public class ActivoValidator {
     }
 
     // Método para insertar o actualizar activos
-    public StringBuilder activoIns(boolean upd) {
+    public StringBuilder activoInsUpd(boolean upd) {
         List<String> message = new LinkedList<>();
         StringBuilder result = null;
-        
+
         Integer idactivo = DeString.toInteger(request.getParameter("idactivo"));
         String nombactivo = request.getParameter("nombactivo").toUpperCase();
         String tipo = request.getParameter("tipo");
-        
+
         if (upd && (idactivo == null)) {
             message.add("ID requerido");
             //result = jSon.forMsg("ID requerido");
         }
-        
+
         if (nombactivo == null || nombactivo.trim().length() == 0) {
             message.add("Nombre de activo es requerido");
         } else if (nombactivo.length() <= 2 || nombactivo.length() > 50) {
             message.add("Nombre de activo entre [3; 50] caracteres");
         }
-        
+
         if (tipo == null || tipo.trim().length() == 0) {
             message.add("Tipo de activo es requerido");
         } else if (tipo.length() <= 2 || tipo.length() > 50) {
             message.add("Tipo de activo [3; 50] caracteres");
         }
-        
+
         if (!(tipo.equals("HARDWARE")) && !(tipo.equals("SOFTWARE"))) {
             message.add("Tipo de activo sólo puede ser HARDWARE o SOFTWARE");
         }
-        
+
         Activo activo = new Activo();
         activo.setIdactivo(idactivo);
         activo.setNombactivo(nombactivo);
         activo.setTipo(tipo);
-        
+
         if (message.isEmpty()) {
             String msg = upd ? daoActivo.activoUpd(activo) : daoActivo.activoIns(activo);
-            
+
             if (msg != null) {
                 result = jSon.forMsg(msg);
             }
         } else {
             result = jSon.forMsg(message);
         }
-        
+
         return result;
     }
 
@@ -97,7 +97,7 @@ public class ActivoValidator {
             result = jSon.forMsg("Lista de ID(s) incorrecta");
         } else {
             String msg = daoActivo.activoDel(ids);
-            
+
             if (msg != null) {
                 result = jSon.forMsg(msg);
             }
@@ -112,15 +112,29 @@ public class ActivoValidator {
         Integer idactivo = DeString.toInteger(request.getParameter("idactivo"));
         if (idactivo != null) {
             Activo activo = daoActivo.activoGet(idactivo);
-            
+
             if (activo != null) {
                 String[] til = {"idactivo", "nombactivo", "tipo"};
                 Object[] dat = {activo.getIdactivo(), activo.getNombactivo(), activo.getTipo()};
-                
+
                 result = jSon.forUpd(til, dat);
             } else {
                 result = jSon.forMsg(daoActivo.getMessage());
             }
+        }
+        return result;
+    }
+
+    // Buscar activo por nombre
+    public StringBuilder activoPorNombreQry() {
+        StringBuilder result;
+        String nombactivo = request.getParameter("nombactivo");
+        List<Object[]> list = daoActivo.activoPorNombreQry(nombactivo);
+        if (list == null) {
+            result = jSon.forMsg(daoActivo.getMessage());
+        } else {
+            String[] titulos = {"idactivo", "nombactivo", "tipo"};
+            result = jSon.forQry(titulos, list);
         }
         return result;
     }
