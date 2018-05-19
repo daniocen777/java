@@ -5,50 +5,41 @@
         <li><a href="#" class="parent"><span>Mis Datos</span></a>
             <div>
                 <ul>
-                    <li><a href="#"><span>Administrar Usuarios</span></a></li>
-                    <li><a href="../../Usuarios?accion=LOGOUT"><span>Cerrar Sesi&oacute;n</span></a></li>
+
                 </ul>
             </div>
         </li>
 
         <li>
-            <a href="#" class="parent"><span>Activos</span></a>
+            <a href="#" class="parent"><span>Gestionar Activos</span></a>
             <div>
                 <ul>
-                    <li><a href="#"><span>Proceso Activos</span></a></li>
+                    <li><a href="../../view/admin/activos.jsp"><span>Activos</span></a></li>
+                    <li><a href="#"><span>Activos Específicos</span></a></li>
                 </ul>
             </div>
-        </li>
+        </li>     
 
         <li>
-            <a href="#" class="parent"><span>Activos Espec.</span></a>
+            <a href="#" class="parent"><span>Gestionar Amenazas</span></a>
             <div>
                 <ul>
-                    <li><a href="#"><span>Proceso Activos Espec.</span></a></li>
+                    <li><a href="#"><span>Amenazas</span></a></li>
                 </ul>
             </div>
         </li>
 
         <li>
-            <a href="#" class="parent"><span>Amenazas</span></a>
+            <a href="#" class="parent"><span>Gestionar salvaguardas</span></a>
             <div>
                 <ul>
-                    <li><a href="#"><span>Proceso Amenazas</span></a></li>
+                    <li><a href="#"><span>Salvaguardas</span></a></li>
                 </ul>
             </div>
         </li>
 
         <li>
-            <a href="#" class="parent"><span>Activos VS Amenazas</span></a>
-            <div>
-                <ul>
-                    <li><a href="#"><span>Proceso de Activos y Amenazas</span></a></li>
-                </ul>
-            </div>
-        </li>
-
-        <li>
-            <a href="#" class="parent"><span>Riesgos</span></a>
+            <a href="#" class="parent"><span>Gestionar Riesgos</span></a>
             <div>
                 <ul>
                     <li><a href="#"><span>Proceso Riesgos</span></a></li>
@@ -60,6 +51,7 @@
         <li class="last">
             <a href="../../Usuarios?accion=LOGOUT"><span>Cerrar Sesi&oacute;n</span></a>
         </li>
+
     </ul>
 </div>
 
