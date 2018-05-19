@@ -32,10 +32,19 @@ public class ActivoServlet extends HttpServlet {
                 result = activoValidator.activoQry();
                 break;
             case "INS":
-                result = activoValidator.activoIns(false);
+                result = activoValidator.activoInsUpd(false);
                 break;
             case "DEL":
                 result = activoValidator.activoDel();
+                break;
+            case "GET":
+                result = activoValidator.activoGet();
+                break;
+            case "UPD":
+                result = activoValidator.activoInsUpd(true);
+                break;
+            case "FIND":
+                result = activoValidator.activoPorNombreQry();
                 break;
             case "":
                 result = jSon.forMsg("Solicitud no recibida");
