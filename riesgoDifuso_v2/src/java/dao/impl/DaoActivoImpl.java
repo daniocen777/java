@@ -50,8 +50,37 @@ public class DaoActivoImpl extends Dao implements DaoActivo {
     }
 
     @Override
-    public List<Object[]> activoPorNombreQry(String nombact) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Object[]> activoPorNombreQry(String nombactivo) {
+        List<Object[]> list = null;
+        sql.delete(0, sql.length())
+                .append("SELECT ")
+                .append("idactivo,")
+                .append("nombactivo,")
+                .append("tipo ")
+                .append("FROM activo ")
+                .append("WHERE UPPER(activo.nombactivo) LIKE UPPER('%")
+                .append(nombactivo)
+                .append("%')")
+                .append("ORDER BY nombactivo");
+        try (Connection cn = db.getConnection();
+                PreparedStatement ps = cn.prepareStatement(sql.toString());
+                ResultSet rs = ps.executeQuery()) {
+
+            list = new LinkedList<>(); // Instanciar la lista
+            while (rs.next()) {
+                Object[] fil = new Object[3];
+
+                fil[0] = rs.getInt(1);
+                fil[1] = rs.getString(2);
+                fil[2] = rs.getString(3);
+
+                list.add(fil);
+            }
+
+        } catch (SQLException e) {
+            message = e.getMessage();
+        }
+        return list;
     }
 
     @Override
