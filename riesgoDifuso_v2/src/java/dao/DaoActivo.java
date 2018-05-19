@@ -15,7 +15,7 @@ public interface DaoActivo {
 
     public List<Object[]> activoQry(); // Listado de los activos
 
-    public List<Object[]> activoPorNombreQry(String nombact); // Listado de los activos por nombre
+    public List<Object[]> activoPorNombreQry(String nombactivo); // Listado de los activos por nombre
 
     public String activoIns(Activo activo); // Método para insertar (ins) los activos
 
