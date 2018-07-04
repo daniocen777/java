@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="FrasesCreateDlg" widgetVar="FrasesCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{myBundle.CreateFrasesTitle}" closeOnEscape="true">
+
+            <h:form id="FrasesCreateForm">
+
+                <h:panelGroup id="display" rendered="#{frasesController.selected != null}">
+                    <p:panelGrid columns="2" columnClasses="column">
+
+                        <p:outputLabel value="#{myBundle.CreateFrasesLabel_frase}" for="frase" />
+                        <p:inputTextarea rows="4" cols="30" id="frase" value="#{frasesController.selected.frase}" title="#{myBundle.CreateFrasesTitle_frase}" required="true" requiredMessage="#{myBundle.CreateFrasesRequiredMessage_frase}"/>
+
+                        <p:outputLabel value="#{myBundle.CreateFrasesLabel_idautor}" for="idautor" />
+                        <p:selectOneMenu id="idautor" value="#{frasesController.selected.idautor}" required="true" requiredMessage="#{myBundle.CreateFrasesRequiredMessage_idautor}" converter="autoresConverter">
+                            <f:selectItem itemLabel="#{myBundle.SelectOneMessage}"/>
+                            <f:selectItems value="#{autoresController.items}"
+                                           var="idautorItem"
+                                           itemValue="#{idautorItem}"
+                                           itemLabel="#{idautorItem.idautor.toString()}"
+                                           />
+
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{frasesController.saveNew}" value="#{myBundle.Save}" update="display,:FrasesListForm:datalist,:growl" oncomplete="handleSubmit(xhr,status,args,PF('FrasesCreateDialog'));">
+                        <p:confirm header="#{myBundle.ConfirmationHeader}" message="#{myBundle.ConfirmCreateMessage}" icon="ui-icon-alert"/>
+                    </p:commandButton>
+
+                    <p:commandButton value="#{myBundle.Cancel}" oncomplete="PF('FrasesCreateDialog').hide()" update="display" process="@this" immediate="true" resetValues="true"/>
+                </h:panelGroup>
+
+            </h:form>
+
+        </p:dialog>
+
+    </ui:composition>
+
+</html>

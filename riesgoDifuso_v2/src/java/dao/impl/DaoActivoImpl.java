@@ -11,13 +11,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import log.LOG4J;
 
 /**
  *
  * @author DANIEL
  */
 public class DaoActivoImpl extends Dao implements DaoActivo {
-
+   
     @Override
     public List<Object[]> activoQry() {
         List<Object[]> list = null;
@@ -99,9 +100,9 @@ public class DaoActivoImpl extends Dao implements DaoActivo {
 
             // Al ejecutar, retorna un entero
             int ctos = ps.executeUpdate(); // Para insert, delete y update
-            message = (ctos != 0) ? "ok" : "0 filas afectadas";
+            message = (ctos != 0) ? "ok" : "0 filas afectadas";            
         } catch (SQLException e) {
-            message = e.getMessage();
+            message = e.getMessage();            
         }
         return message;
     }
@@ -201,7 +202,36 @@ public class DaoActivoImpl extends Dao implements DaoActivo {
 
     @Override
     public List<Object[]> activoCbo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Object[]> list = null;
+        sql.delete(0, sql.length())
+                .append("SELECT ")
+                .append("idactivo,")
+                .append("nombactivo,")
+                .append("tipo ")
+                .append("FROM activo ")
+                .append("ORDER BY nombactivo");
+
+        try (Connection cn = db.getConnection();
+                PreparedStatement ps = cn.prepareStatement(sql.toString());
+                ResultSet rs = ps.executeQuery()) {
+
+            list = new LinkedList<>();
+
+            while (rs.next()) {
+                Object[] fil = new Object[3];
+
+                fil[0] = rs.getInt(1);
+                fil[1] = rs.getString(2); // Nombre de activo
+                fil[2] = rs.getString(3);
+
+                list.add(fil);
+            }
+
+        } catch (SQLException e) {
+            message = e.getMessage();
+        }
+
+        return list;
     }
 
     @Override

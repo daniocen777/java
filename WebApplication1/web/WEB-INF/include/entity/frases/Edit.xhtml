@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="FrasesEditDlg" widgetVar="FrasesEditDialog" modal="true" resizable="false"  appendTo="@(body)" header="#{myBundle.EditFrasesTitle}" closeOnEscape="true">
+
+            <h:form id="FrasesEditForm">
+
+                <h:panelGroup id="display">
+                    <p:panelGrid  columns="2" columnClasses="column" rendered="#{frasesController.selected != null}">
+
+
+                        <h:outputLabel value="#{myBundle.EditFrasesLabel_idfrase}" for="idfrase" />
+                        <h:outputText id="idfrase" value="#{frasesController.selected.idfrase}" />
+
+                        <p:outputLabel value="#{myBundle.EditFrasesLabel_frase}" for="frase" />
+                        <p:inputTextarea rows="4" cols="30" id="frase" value="#{frasesController.selected.frase}" title="#{myBundle.EditFrasesTitle_frase}" required="true" requiredMessage="#{myBundle.EditFrasesRequiredMessage_frase}"/>
+
+                        <p:outputLabel value="#{myBundle.EditFrasesLabel_idautor}" for="idautor" />
+                        <p:selectOneMenu id="idautor" value="#{frasesController.selected.idautor}" required="true" requiredMessage="#{myBundle.EditFrasesRequiredMessage_idautor}" converter="autoresConverter">
+                            <f:selectItem itemLabel="#{myBundle.SelectOneMessage}"/>
+                            <f:selectItems value="#{autoresController.items}"
+                                           var="idautorItem"
+                                           itemValue="#{idautorItem}"
+                                           itemLabel="#{idautorItem.idautor.toString()}"
+                                           />
+
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{frasesController.save}" value="#{myBundle.Save}" update="display,:FrasesListForm:datalist,:FrasesListForm:FrasesDataTableContextMenu,:growl" oncomplete="handleSubmit(xhr,status,args,PF('FrasesEditDialog'));">
+                        <p:confirm header="#{myBundle.ConfirmationHeader}" message="#{myBundle.ConfirmEditMessage}" icon="ui-icon-alert"/>
+                    </p:commandButton>
+                    <p:commandButton value="#{myBundle.Cancel}" oncomplete="PF('FrasesEditDialog').hide()" update="display" process="@this" immediate="true" resetValues="true"/>
+                </h:panelGroup>
+
+            </h:form>
+
+        </p:dialog>
+
+    </ui:composition>
+
+</html>

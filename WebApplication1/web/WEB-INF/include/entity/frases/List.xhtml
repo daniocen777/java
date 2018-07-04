@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="FrasesListForm">
+
+        <p:panel header="#{myBundle.ListFrasesTitle}">
+            <p:contextMenu id="FrasesDataTableContextMenu" for="datalist">  
+                <p:menuitem value="#{myBundle.Create}" onclick="document.getElementById('FrasesListForm:createButton').click();" icon="ui-icon-plus"/>
+                <p:menuitem value="#{myBundle.View}" onclick="document.getElementById('FrasesListForm:viewButton').click();" icon="ui-icon-search"/>
+                <p:menuitem value="#{myBundle.Edit}" onclick="document.getElementById('FrasesListForm:editButton').click();" icon="ui-icon-pencil"/>
+                <p:menuitem value="#{myBundle.Delete}" onclick="document.getElementById('FrasesListForm:deleteButton').click();" icon="ui-icon-trash"/>
+                <p:separator/>
+                <p:menuitem value="#{myBundle.FrasesMenuItem_idautor}" icon="ui-icon-search"  actionListener="#{frasesController.prepareIdautor}" update=":AutoresViewForm" oncomplete="PF('AutoresViewDialog').show()" disabled="#{empty frasesController.selected.idautor}"/>  
+            </p:contextMenu>
+            <p:dataTable id="datalist"
+                         value="#{frasesController.items}"
+                         lazy="false"
+                         rowKey="#{item.idfrase}"
+                         var="item"
+                         paginator="true"
+                         rows="5"
+                         rowsPerPageTemplate="5,10,20,30,40,50"
+                         selectionMode="single"
+                         selection="#{frasesController.selected}"
+                         filteredValue="#{frasesController.filteredItems}">
+                <!--
+                         To enable Lazy Loading, please copy/replace the following lines above,
+                         and be sure to replace the word HASH with the # symbol:
+                
+                         value="HASH{frasesController.lazyItems}"
+                         lazy="true"
+                         rowKey="HASH{item.idfrase}"  <<< Remove this line
+                -->
+
+
+                <p:ajax event="rowSelect"   update="@form:createButton,@form:viewButton,@form:editButton,@form:deleteButton,@form:FrasesDataTableContextMenu" listener="#{frasesController.resetParents}"/>
+                <p:ajax event="rowUnselect" update="@form:createButton,@form:viewButton,@form:editButton,@form:deleteButton,@form:FrasesDataTableContextMenu" listener="#{frasesController.resetParents}"/>
+                <p:ajax event="contextMenu" update="@form:createButton @form:viewButton @form:editButton @form:deleteButton" listener="#{frasesController.resetParents}"/>
+                <p:ajax event="rowDblselect" onsuccess="document.getElementById('FrasesListForm:viewButton').click();"/>
+
+                <p:column sortBy="#{item.idfrase}" filterBy="#{item.idfrase}">
+                    <f:facet name="header">
+                        <h:outputText value="#{myBundle.ListFrasesTitle_idfrase}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.idfrase}"/>
+                </p:column>
+
+
+                <p:column sortBy="#{item.frase}" filterBy="#{item.frase}">
+                    <f:facet name="header">
+                        <h:outputText value="#{myBundle.ListFrasesTitle_frase}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.frase}"/>
+                </p:column>
+
+
+                <p:column sortBy="#{item.idautor.idautor}" filterBy="#{item.idautor.idautor}">
+                    <f:facet name="header">
+                        <h:outputText value="#{myBundle.ListFrasesTitle_idautor}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.idautor.idautor}"/>
+                </p:column>
+
+
+            </p:dataTable>
+
+            <p:commandButton id="createButton"                             icon="ui-icon-plus"   value="#{myBundle.Create}" actionListener="#{frasesController.prepareCreate}" update=":FrasesCreateForm" oncomplete="PF('FrasesCreateDialog').show()"/>
+            <p:commandButton id="viewButton"   style="visibility: hidden;" icon="ui-icon-search" value="#{myBundle.View}" update=":FrasesViewForm" oncomplete="PF('FrasesViewDialog').show()" disabled="#{empty frasesController.selected}"/>
+            <p:commandButton id="editButton"   style="visibility: hidden;" icon="ui-icon-pencil" value="#{myBundle.Edit}" update=":FrasesEditForm" oncomplete="PF('FrasesEditDialog').show()" disabled="#{empty frasesController.selected}"/>
+            <p:commandButton id="deleteButton" style="visibility: hidden;" icon="ui-icon-trash"  value="#{myBundle.Delete}" actionListener="#{frasesController.delete}" update=":growl,datalist" disabled="#{empty frasesController.selected}">
+                <p:confirm header="#{myBundle.ConfirmationHeader}" message="#{myBundle.ConfirmDeleteMessage}" icon="ui-icon-alert"/>
+            </p:commandButton>
+
+        </p:panel>
+        <ui:include src="/WEB-INF/include/confirmation.xhtml"/>
+    </h:form>
+
+</ui:composition>

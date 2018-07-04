@@ -12,6 +12,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import parainfo.convert.DeString;
 import parainfo.json.JSon;
+import log.LOG4J;
 
 /**
  *
@@ -22,10 +23,13 @@ public class ActivoValidator {
     private final HttpServletRequest request;
     JSon jSon = new JSon();
     private final DaoActivo daoActivo;
+    private LOG4J log;
+    
 
     public ActivoValidator(HttpServletRequest request) {
         this.request = request;
         this.daoActivo = new DaoActivoImpl();
+        log = new LOG4J();
     }
 
     // Método para listar activos
@@ -78,12 +82,13 @@ public class ActivoValidator {
 
         if (message.isEmpty()) {
             String msg = upd ? daoActivo.activoUpd(activo) : daoActivo.activoIns(activo);
-
             if (msg != null) {
                 result = jSon.forMsg(msg);
+                log.info("Info de inserción O edición: " + msg);
             }
         } else {
             result = jSon.forMsg(message);
+            log.error("ERROR inserción O edición: " + result);
         }
 
         return result;
@@ -95,11 +100,13 @@ public class ActivoValidator {
         List<Integer> ids = DeString.ids(request.getParameter("ids"));
         if (ids == null) {
             result = jSon.forMsg("Lista de ID(s) incorrecta");
+            log.error("Error de eliminación: " + result);
         } else {
             String msg = daoActivo.activoDel(ids);
-
+            log.info("Se eliminó activos: " + msg);
             if (msg != null) {
                 result = jSon.forMsg(msg);
+                log.error("Error de eliminación: " + result);
             }
         }
         return result;

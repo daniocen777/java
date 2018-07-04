@@ -1,9 +1,9 @@
 $(function () {
-    activoEspecQry();
-    //actEspecCbo();
+    actEspecQry();
 });
 
-function activoEspecQry() {
+// Función para el QRY
+function actEspecQry() {
     $.ajax({
         url: "../../ActEspec",
         dataType: "json",
@@ -24,32 +24,32 @@ function activoEspecQry() {
 
                 for (var i = 1; i < data.length; ++i) {
                     var idactespec = data[i].idactespec;
-                    var nombact = data[i].nombact;
+                    var nombactivo = data[i].nombactivo;
                     var nombactespec = data[i].nombactespec;
 
                     body += "<tr>"
-                            + "<td colspan='2'>" + nombact + "</td>"
+                            + "<td colspan='2'>" + nombactivo + "</td>"
                             + "<td>" + nombactespec + "</td>"
                             + "<th><input type='radio' name='idactespec_upd' value='" + idactespec + "'/></th>"
                             + "<th><input type='checkbox' name='idactespec_del' value='" + idactespec + "'/></th>"
                             + "</tr>";
                 }
 
-                $("#activoEspecQry").html(body);
+                $("#activoespecQry").html(body);
                 $("#msg_error").css("visibility", "hidden"); // si Ok, limpia
             }
         }
     });
 }
 
-//Poblar el combo
-function actEspecCbo() {
+// Función para llenar el combo de activos
+function activoCbo() {
     $.ajax({
         url: "../../ActEspec",
         dataType: "json",
         type: "post",
         data: {
-            accion: "CBO"
+            accion: "ACTCBO"
         },
         success: function (data) {
             var msg = $(data).find('msg').text();
@@ -61,12 +61,6 @@ function actEspecCbo() {
 
             } else {
                 var option = "";
-//                $(data).find('op').each(function () {
-//                    var text = $(this).text();
-//                    var value = $(this).attr('id');
-//
-//                    option += "<option value=\"" + value + "\">" + text + "</option>";
-//                });
                 option += "<option value='0' selected='selected'>[..Seleccione..]</option>";
 
                 for (var i = 1; i < data.length; ++i) {
@@ -74,61 +68,19 @@ function actEspecCbo() {
                     var opt = data[i].opt;
                     option += "<option value=\"" + id + "\">" + opt + "</option>";
                 }
-                $("#actEspecCbo").html(option);
-
+                $("#activoCbo_ins").html(option);
                 $("#msg_error").css("visibility", "hidden"); // si Ok, limpia
             }
         }
     });
 }
 
-function activosCboXEspec() {
-    
-    $.ajax({
-        url: "../../ActEspec",
-        dataType: "json",
-        type: "post",
-        data: {
-            accion: "CBOACT"
-        },
-        success: function (data) {
-            var msg = $(data).find('msg').text();
-
-            if ($.trim(msg).length !== 0) {
-                $("#msg_error").text(msg);
-                $("#msg_error").css("visibility", "visible");
-                //$("#activoEspecQry").html("");
-
-            } else {
-                var option = "";
-                var id = $("input[name='idactespec_upd']:checked").val();
-                for (var i = 1; i < data.length; ++i) {
-                    var idactespec = data[i].idactespec;
-                    var idactivo = data[i].idactivo;
-                    var nombact = data[i].nombact;
-                    if (id == idactespec) {
-                        option += "<option selected='selected' value=\"" + idactivo + "\">" + nombact + "</option>";
-                    } else {
-                        option += "<option value=\"" + idactivo + "\">" + nombact + "</option>";
-                    }
-
-
-                }
-
-                $("#actEspecCbo_upd").html(option);
-                $("#msg_error").css("visibility", "hidden"); // si Ok, limpia
-            }
-        }
-    });
-}
-
-// Insertar 
+// Función para insertar 
 function actEspecIns() {
-    //$("#actEspecCbo").val("");
     $("#nombactespec_ins").val("");
     $("#ins_error").html("");
     $("#ins_error").css("visibility", "hidden");
-    actEspecCbo();
+    activoCbo();
 
     $("#dins").dialog({
         modal: true,
@@ -144,7 +96,7 @@ function actEspecIns() {
                     dataType: "json",
                     data: {
                         accion: "INS",
-                        idactivo: $("#actEspecCbo").val(),
+                        idactivo: $("#activoCbo_ins").val(),
                         nombactespec: $("#nombactespec_ins").val()
                     },
                     success: function (error) {
@@ -163,14 +115,8 @@ function actEspecIns() {
                             $("#ins_error").css("visibility", "visible");
 
                         } else {
-                            $("#msg_war").html("");
-                            $("#msg_war").css("visibility", "hidden");
-                            $("#msg_alert").html("");
-                            $("#msg_alert").css("visibility", "hidden");
-                            var ok = "<p>" + "Se agregó nuevo activo específico" + "</p>";
-                            $("#msg_ok").html(ok);
-                            $("#msg_ok").css("visibility", "visible");
-                            activoEspecQry();
+                            alertify.success("¡CONFIRMADO! El registro fue guardado");
+                            actEspecQry();
                             $("#dins").dialog("close");
                         }
                     }
@@ -180,7 +126,7 @@ function actEspecIns() {
     });
 }
 
-// Eliminar activo específico
+// Función para eliminar
 function actEspecDel() {
     var ids = [];
 
@@ -199,7 +145,7 @@ function actEspecDel() {
                 "No": function () {
                     $(this).dialog("close");
                 },
-                "Si": function () {
+                "Sí": function () {
                     $(this).dialog("close");
 
                     $.ajax({
@@ -218,14 +164,9 @@ function actEspecDel() {
                                 $("#msg_error").css("visibility", "visible");
 
                             } else {
-                                $("#msg_ok").html("");
-                                $("#msg_ok").css("visibility", "hidden");
-                                $("#msg_alert").html("");
-                                $("#msg_alert").css("visibility", "hidden");
-                                var war = "<p>" + "Activo(s) Específico(s) eliminada(s)" + "</p>";
-                                $("#msg_war").html(war);
-                                $("#msg_war").css("visibility", "visible");
-                                activoEspecQry();
+                                $("#nombactespec_find").val("");
+                                alertify.error("¡ATENTO! Los registros fueron eliminados");
+                                actEspecQry();
                                 $("#msg_error").css("visibility", "hidden");
                             }
 
@@ -238,142 +179,3 @@ function actEspecDel() {
     }
 }
 
-// ACTUALIZAR
-function actEspecUpd() {
-
-    var id = $("input[name='idactespec_upd']:checked").val();
-
-    if (isNaN(id)) {
-        message("Advertencia", "Seleccione Fila para Actualizar Datos");
-    } else {
-        $.ajax({
-            url: "../../ActEspec",
-            dataType: "json",
-            type: "post",
-            data: {
-                accion: "GET",
-                idactespec: id
-            },
-            success: function (data) {
-                activosCboXEspec();
-                var msg = data[0].msg;
-
-                if ($.trim(msg).length !== 0) {
-                    $("#msg_error").text(msg);
-                    $("#msg_error").css("visibility", "visible");
-
-                } else {
-
-                    var idactespec = data[1].idactespec;
-                    //var idactivo = data[1].idactivo;
-                    var nombact = data[1].nombact;
-                    var nombactespec = data[1].nombactespec;
-
-                    $("#idactespec_upd").val(idactespec);
-                    $("#actEspecCbo_upd").val(nombact);
-                    $("#nombactespec_upd").val(nombactespec);
-                    $("#upd_error").html("");
-                    $("#upd_error").css("visibility", "hidden");
-
-                    $("#dupd").dialog({
-                        modal: true,
-                        width: 440,
-                        buttons: {
-                            "Cancelar": function () {
-                                $(this).dialog("close");
-                            },
-                            "Enviar Datos": function () {
-                                $.ajax({
-                                    url: "../../ActEspec",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: {
-                                        accion: "UPD",
-                                        idactespec: $("#idactespec_upd").val(),
-                                        idactivo: $("#actEspecCbo_upd").val(),
-                                        nombactespec: $("#nombactespec_upd").val()
-                                    },
-                                    success: function (error) {
-                                        var msg = error[0].msg;
-
-                                        if ($.trim(msg).length !== 0 && msg !== 'ok') {
-                                            var ctos = error.length;
-
-                                            var msg = "<ul>";
-                                            for (var i = 0; i < ctos; ++i) {
-                                                msg += "<li>" + error[i].msg + "</li>";
-                                            }
-                                            msg += "</ul>";
-
-                                            $("#upd_error").html(msg);
-                                            $("#upd_error").css("visibility", "visible");
-
-                                        } else {
-                                            $("#msg_ok").html("");
-                                            $("#msg_ok").css("visibility", "hidden");
-                                            $("#msg_war").html("");
-                                            $("#msg_war").css("visibility", "hidden");
-                                            var alert = "<p>" + "Activo Específico actualizado" + "</p>";
-                                            $("#msg_alert").html(alert);
-                                            $("#msg_alert").css("visibility", "visible");
-                                            activoEspecQry();
-                                            $("#dupd").dialog("close");
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    });
-
-                }
-
-            }
-        });
-    }
-}
-
-// Encontrar activo específico por nombre
-function actEspecPorNombreQry() {
-    $.ajax({
-        url: "../../ActEspec",
-        dataType: "json",
-        type: "post",
-        data: {
-            accion: "FIND",
-            nombactespec: $("#nombactespec_find").val()
-        },
-        success: function (data) {
-            var msg = data[0].msg;
-
-            if ($.trim(msg).length !== 0) {
-                $("#msg_error").text(msg);
-                $("#msg_error").css("visibility", "visible");
-                $("#activoEspecQry").html("");
-
-            } else {
-                if ($("#nombactespec_find").val().length !== 0) {
-                    var body = "";
-
-                    for (var i = 1; i < data.length; ++i) {
-                        var idactespec = data[i].idactespec;
-                        var nombact = data[i].nombact;
-                        var nombactespec = data[i].nombactespec;
-
-                        body += "<tr>"
-                                + "<td colspan='2'>" + nombact + "</td>"
-                                + "<td>" + nombactespec + "</td>"
-                                + "<th><input type='radio' name='idactespec_upd' value='" + idactespec + "'/></th>"
-                                + "<th><input type='checkbox' name='idactespec_del' value='" + idactespec + "'/></th>"
-                                + "</tr>";
-                    }
-
-                    $("#activoEspecQry").html(body);
-                    $("#msg_error").css("visibility", "hidden"); // si Ok, limpia
-                } else {
-                    activoEspecQry();
-                }
-
-            }
-        }
-    });
-}

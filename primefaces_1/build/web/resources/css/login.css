@@ -1,0 +1,6 @@
+body {
+    background-color: #ECF3FD;
+}
+.ui-state-default .icon-login{
+    background-image: url(../images/icon/process.png);
+}

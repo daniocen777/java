@@ -1,0 +1,98 @@
+body {
+    background-color: #ffffff;
+    font-size: 12px;
+    font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    color: #000000;  
+    margin: 10px;
+}
+
+h1 {
+    font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    border-bottom: 1px solid #AFAFAF; 
+    font-size:  16px;
+    font-weight: bold;
+    margin: 0px;
+    padding: 0px;
+    color: #D20005;
+}
+
+a:link, a:visited {
+    color: #045491;
+    font-weight : bold;
+    text-decoration: none;
+}
+
+a:link:hover, a:visited:hover  {
+    color: #045491;
+    font-weight : bold;
+    text-decoration : underline;
+}
+
+.dolar {
+    /*
+    background: url("#{resource['icon/mail.png']}");
+    background-image: url("../icon/calendar-blue.png") !important; */
+    background-image:url('../icon/console.png') !important;
+
+}
+
+.ui-icon-csv {
+    background-image: url(icon/console.png);
+}
+
+.edit-icon {
+    background-image: url("#{facesContext.externalContext.request.contextPath}/resources/images/icon/editar.png") !important;
+    margin-right: 7px;
+}
+
+.delete-icon {
+    background-image: url("#{facesContext.externalContext.request.contextPath}/resources/images/icon/ic_delete.png") !important;
+    margin-right: 7px;
+}
+
+.tools-icon {
+    background-image: url("#{facesContext.externalContext.request.contextPath}/resources/images/icon/ic_mantenimiento.png") !important;
+    margin-right: 7px;
+}
+
+.group-icon {
+    background-image: url("#{facesContext.externalContext.request.contextPath}/resources/images/icon/ic_group.png") !important;
+    margin-right: 7px;
+}
+
+.hand-icon {
+    background-image: url("#{facesContext.externalContext.request.contextPath}/resources/images/icon/ic_mano.png") !important;
+    margin-right: 7px;
+}
+
+.add-icon {
+    background-image: url("#{facesContext.externalContext.request.contextPath}/resources/images/icon/ic_add.png") !important;
+    margin-right: 7px;
+}
+
+.save-icon {
+    background-image: url("#{facesContext.externalContext.request.contextPath}/resources/images/icon/ic_save.png") !important;
+    margin-right: 7px;    
+}
+
+.cancel-icon {
+    background-image: url("#{facesContext.externalContext.request.contextPath}/resources/images/icon/ic_cancel.png") !important;
+    margin-right: 7px;    
+}
+
+.process-icon {
+    background-image: url("#{facesContext.externalContext.request.contextPath}/resources/images/icon/ic_process.png") !important;
+    margin-right: 7px;    
+}
+
+.pie-icon {
+    background-image: url("#{facesContext.externalContext.request.contextPath}/resources/images/icon/ic_pie.png") !important;
+    margin-right: 7px;    
+}
+
+.bar-icon {
+    background-image: url("#{facesContext.externalContext.request.contextPath}/resources/images/icon/ic_bar.png") !important;
+    margin-right: 7px;    
+}
+
+

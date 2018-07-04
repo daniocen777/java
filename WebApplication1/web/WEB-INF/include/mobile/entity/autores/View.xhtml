@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">
+
+    <pm:page id="AutoresViewPage" lazy="true">
+        <pm:header title="#{myBundle.ViewAutoresTitle}">
+            <h:form>
+                <p:commandButton styleClass="ui-btn-left ui-btn-inline" value="#{myBundle.Cancel}" icon="ui-icon-arrow-l" action="#{mobilePageController.navigateBackInHistory('pm:AutoresListPage')}"/>
+            </h:form>
+        </pm:header>
+
+        <pm:content>
+
+            <h:form id="AutoresViewForm">
+
+                <h:panelGroup id="display">
+                    <p:outputPanel rendered="#{autoresController.selected != null}">
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewAutoresLabel_idautor}"/>
+                            <h:outputText value="#{autoresController.selected.idautor}" title="#{myBundle.ViewAutoresTitle_idautor}"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewAutoresLabel_autor}"/>
+                            <h:outputText value="#{autoresController.selected.autor}" title="#{myBundle.ViewAutoresTitle_autor}"/>
+                        </pm:field>
+                    </p:outputPanel>
+                </h:panelGroup>
+
+            </h:form>
+
+        </pm:content>
+
+    </pm:page>
+
+</ui:composition>

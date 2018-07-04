@@ -1,0 +1,205 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+
+                <h:form id="formBtn">
+                    <p:commandButton value="Agregar" 
+                                     oncomplete="PF('dialogFraseIns').show();"
+                                     update=":formFraseIns"
+                                     styleClass="ui-priority-primary"
+                                     actionListener="#{frasesBean.prepararFrase()}"
+                                     icon="add-icon">
+                    </p:commandButton>
+                </h:form>
+
+                <p:growl id="growl" showDetail="true" life="4000"/>
+                <p:separator />
+
+                <!-- INICIO - Tabla, datos de autores -->
+                <h:form id="frasesQry">
+                    <p:dataTable id="fraseTable" var="frases"
+                                 value="#{frasesBean.listFrases}"
+                                 emptyMessage="No hay datos"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rows="5"
+                                 rowsPerPageTemplate="5,10,15"
+                                 rowKey="#{frases.idfrase}"
+                                 selection="#{frasesBean.frases}"
+                                 selectionMode="single"
+                                 paginatorPosition="bottom">
+
+                        <f:facet name="header">
+                            Lista de Frases
+                        </f:facet>
+
+                        <p:column headerText="AUTOR" style="text-align: center"
+                                  filterBy="#{frases.autores.autor}" filterMatchMode="contains">
+                            <h:outputText value="#{frases.autores.autor}"/>
+                        </p:column>
+
+                        <p:column headerText="FRASE" style="text-align: center"
+                                  filterBy="#{frases.frase}" filterMatchMode="contains">
+                            <h:outputText value="#{frases.frase}"/>
+                        </p:column>
+
+                        <p:column style="text-align: center" width="100">
+                            <p:commandButton value="Editar" title="Editar"
+                                             oncomplete="PF('dialogFraseUpd').show()"
+                                             update=":formFraseUpd"
+                                             icon="edit-icon"
+                                             >
+                                <f:setPropertyActionListener target="#{frasesBean.frases}" value="#{frases}" />
+                            </p:commandButton>
+                        </p:column>
+
+                        <p:column style="text-align: center" width="100">
+                            <p:commandButton value="Eliminar" title="Eliminar" 
+                                             oncomplete="PF('dialogFrasesDel').show()"
+                                             update=":formFrasesDel"
+                                             icon="delete-icon">
+                                <f:setPropertyActionListener target="#{frasesBean.frases}" value="#{frases}" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:contextMenu for="fraseTable">
+                        <p:menuitem value="Ver" update="fraseDetail" icon="ui-icon-search" oncomplete="PF('fraseDialog').show()"/>
+                    </p:contextMenu>
+
+                    <p:dialog header="Información de la frase" widgetVar="fraseDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="fraseDetail" style="text-align:center;">
+                            <p:panelGrid  columns="2" rendered="#{not empty frasesBean.frases}" columnClasses="label,value">
+                                <h:outputText value="Id Autor:" />
+                                <h:outputText value="#{frasesBean.frases.autores.idautor}" />
+
+                                <h:outputText value="Autor:" />
+                                <h:outputText value="#{frasesBean.frases.autores.autor}" />
+
+                                <h:outputText value="Id Frase:" />
+                                <h:outputText value="#{frasesBean.frases.idfrase}" />
+
+                                <h:outputText value="Frase:" />
+                                <h:outputText value="#{frasesBean.frases.frase}" />
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:dialog>
+
+                </h:form>
+
+                <!-- INICIO - Insertar nueva frase -->
+                <h:form id="formFraseIns">
+                    <p:dialog id="dlgFraseIns" widgetVar="dialogFraseIns" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Nuevo Registro">
+
+                        <h:panelGrid id="gridFrase" columns="3" cellpadding="5">
+                            <!-- -->
+                            <p:outputLabel value="Autor:" for="autoresCbo" />
+                            <p:selectOneMenu id="autoresCbo" value="#{frasesBean.id}" >
+                                <f:selectItem itemLabel="Select One" itemValue="" />
+                                <f:selectItems value="#{frasesBean.autoresCbo}" />
+                            </p:selectOneMenu>
+                            <p:message for="autoresCbo" />
+
+                            <p:outputLabel value="Frase:" for="frase" />
+                            <p:inputText id="frase" value="#{frasesBean.frases.frase}" label="frase" />
+                            <p:message for="frase" />
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="text-align: center; float: right">
+                            <p:commandButton value="Guardar" ajax="true"
+                                             actionListener="#{frasesBean.frasesIns()}"
+                                             update=":frasesQry, gridFrase, :growl, autoresCbo"
+                                             />
+                            <p:commandButton value="Cancelar"
+                                             oncomplete="PF('dialogFraseIns').hide();"/>
+                        </h:panelGrid>
+
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Insertar nueva frase -->
+
+                <!-- INICIO - Eliminar autor -->
+                <h:form id="formFrasesDel">
+                    <p:dialog id="dlgFrasesDel" widgetVar="dialogFrasesDel" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Eliminar Registro">
+
+                        <h:panelGrid columns="1" cellpadding="4">
+                            <p:outputLabel value="¿Desea eliminar registro?" style="text-align: center"/>
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="float: right">
+                            <p:commandButton value="Sí" actionListener="#{frasesBean.frasesDel()}"
+                                             update=":frasesQry, :growl"
+                                             oncomplete="PF('dialogFrasesDel').hide();"/>
+                            <p:commandButton value="No" oncomplete="PF('dialogFrasesDel').hide();"/>
+                        </h:panelGrid>
+
+                    </p:dialog>
+
+                </h:form>
+                <!-- FIN - Eliminar autor -->
+
+                <!-- INICIO - Editar  frase -->
+                <h:form id="formFraseUpd">
+                    <p:dialog id="dlgFraseUpd" widgetVar="dialogFraseUpd" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Editar Registro">
+
+                        <h:panelGrid id="gridFraseUpd" columns="3" cellpadding="5">
+                            <!-- -->
+                            <p:outputLabel value="Autor:" for="autoresCbo" />
+                            <p:selectOneMenu id="autoresCbo" value="#{frasesBean.id}" >
+                                <f:selectItem itemLabel="#{frasesBean.frases.autores.autor}" itemValue="#{frasesBean.id}" />
+                                <f:selectItems value="#{frasesBean.autoresCbo}" />
+                            </p:selectOneMenu>
+                            <p:message for="autoresCbo" />
+
+                            <p:outputLabel value="Frase:" for="frase" />
+                            <p:inputText id="frase" value="#{frasesBean.frases.frase}" label="frase" />
+                            <p:message for="frase" />
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="text-align: center; float: right">
+                            <p:commandButton value="Modificar" ajax="true"
+                                             actionListener="#{frasesBean.frasesUpd()}"
+                                             update=":frasesQry, gridFraseUpd, :growl, autoresCbo"
+                                             />
+                            <p:commandButton value="Cancelar"
+                                             oncomplete="PF('dialogFraseIns').hide();"/>
+                        </h:panelGrid>
+
+                    </p:dialog>
+                </h:form>
+                <!-- FIN- Editar  frase -->
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+    <style type="text/css">
+        .someCssClassName {
+            background-image: url(../resources/images/icon/heart.png)
+        }
+    </style>
+
+</html>

@@ -1,0 +1,173 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+                <h:form id="formBtn">
+                    <p:commandButton value="Agregar" 
+                                     oncomplete="PF('dialogAutoresIns').show();"
+                                     update=":formAutoresIns"
+                                     styleClass="ui-priority-primary"
+                                     actionListener="#{autoresBean.prepararAutor()}"
+                                     icon="add-icon">
+                    </p:commandButton>
+
+                </h:form>
+
+                <p:growl id="growl" showDetail="true" life="4000"/>
+
+                <p:separator />
+                <!-- INICIO - Tabla, datos de autores -->
+                <h:form id="autoresQry">
+
+                    <p:dataTable id="autoreTable" var="autor"
+                                 value="#{autoresBean.listAutores}"
+                                 emptyMessage="No hay datos"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rows="5"
+                                 rowsPerPageTemplate="5,10,15"
+                                 rowKey="#{autor.idautor}"
+                                 selection="#{autoresBean.autores}"
+                                 selectionMode="single"
+                                 paginatorPosition="bottom">
+                        <f:facet name="header">
+                            Lista de Autores
+                        </f:facet>
+
+                        <p:column headerText="AUTOR" style="text-align: center"
+                                  filterBy="#{autor.autor}" filterMatchMode="contains">
+                            <h:outputText value="#{autor.autor}"/>
+                        </p:column>
+
+                        <p:column headerText="VALOR CALCULADO" style="text-align: center"
+                                  filterBy="#{autor.valor}" filterMatchMode="contains">
+                            <h:outputText value="#{autor.valor}"/>
+                        </p:column>
+
+                        <p:column style="text-align: center" width="100">
+                            <p:commandButton value="Editar" title="Editar" 
+                                             oncomplete="PF('dialogAutoresUpd').show()"
+                                             update=":formAutoresUpd"
+                                             icon="edit-icon">
+                                <f:setPropertyActionListener target="#{autoresBean.autores}" value="#{autor}" />
+                            </p:commandButton>
+                        </p:column>
+
+                        <p:column style="text-align: center" width="100">
+                            <p:commandButton value="Eliminar" icon="delete-icon" title="Eliminar" 
+                                             oncomplete="PF('dialogAutoresDel').show()"
+                                             update=":formAutoresDel">
+                                <f:setPropertyActionListener target="#{autoresBean.autores}" value="#{autor}" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:contextMenu for="autoreTable">
+                        <p:menuitem value="Ver" update="autorDetail" icon="ui-icon-search" oncomplete="PF('autorDialog').show()"/>
+                    </p:contextMenu>
+
+                    <p:dialog header="Información de autor" widgetVar="autorDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="autorDetail" style="text-align:center;">
+                            <p:panelGrid  columns="2" rendered="#{not empty autoresBean.autores}" columnClasses="label,value">
+                                <h:outputText value="Id:" />
+                                <h:outputText value="#{autoresBean.autores.idautor}" />
+
+                                <h:outputText value="Autor:" />
+                                <h:outputText value="#{autoresBean.autores.autor}" />                                
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:dialog>
+
+                </h:form>
+                <!-- FIN - Tabla, datos de autores -->
+
+                <!-- INICIO - Insertar nuevo autor -->
+                <h:form id="formAutoresIns">
+                    <p:dialog id="dlgAutoresIns" widgetVar="dialogAutoresIns" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Nuevo Registro">
+                        <h:panelGrid id="gridAutor" columns="3" cellpadding="5">
+                            <p:outputLabel value="Autor:" for="autor" />
+                            <p:inputText id="autor" value="#{autoresBean.autores.autor}" label="autor" />
+                            <p:message for="autor" />
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="text-align: center; float: right">
+                            <p:commandButton value="Guardar" ajax="true"
+                                             action="#{autoresBean.autoresIns()}"
+                                             update=":autoresQry, gridAutor, :growl"                                             
+                                             />
+                            <p:commandButton value="Cancelar"
+                                             oncomplete="PF('dialogAutoresIns').hide();"/>
+                        </h:panelGrid>
+
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Insertar nuevo autor -->
+
+                <!-- INICIO - Editar  autor -->
+                <h:form id="formAutoresUpd">
+                    <p:dialog id="dlgAutoresUpd" widgetVar="dialogAutoresUpd" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Editar Registro">
+                        <h:panelGrid id="gridAutorUpd" columns="3" cellpadding="5">
+                            <p:outputLabel value="Autor" for="autor" />
+                            <p:inputText id="autor" value="#{autoresBean.autores.autor}" label="autor" />
+                            <p:message for="autor" />
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="float: right">
+                            <p:commandButton value="Modificar" 
+                                             actionListener="#{autoresBean.autoresUpd()}" 
+                                             update=":autoresQry, :growl"
+                                             ajax="true"/>
+                            <p:commandButton value="Cancelar" oncomplete="PF('dialogAutoresUpd').hide();"/>
+                        </h:panelGrid>
+
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Editar autor -->
+
+                <!-- INICIO - Eliminar autor -->
+                <h:form id="formAutoresDel">
+                    <p:dialog id="dlgAutoresDel" widgetVar="dialogAutoresDel" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Eliminar Registro">
+
+                        <h:panelGrid columns="1" cellpadding="4">
+                            <p:outputLabel value="¿Desea eliminar registro?" style="text-align: center"/>
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="float: right">
+                            <p:commandButton value="Sí" actionListener="#{autoresBean.autoresDel()}"
+                                             update=":autoresQry, :growl"
+                                             oncomplete="PF('dialogAutoresDel').hide();"/>
+                            <p:commandButton value="No" oncomplete="PF('dialogAutoresDel').hide();"/>
+                        </h:panelGrid>
+
+                    </p:dialog>
+
+                </h:form>
+                <!-- FIN - Eliminar autor -->
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
