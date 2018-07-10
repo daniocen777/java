@@ -19,6 +19,7 @@ public class AutoresBean implements Serializable {
     //private List<Object[]> listAutores;
     private List<Autores> listAutores;
     private Mensajes mensajes;
+    private String label;
 
     public AutoresBean() {
         mensajes = new Mensajes();
@@ -30,6 +31,22 @@ public class AutoresBean implements Serializable {
 
     public void setAutores(Autores autores) {
         this.autores = autores;
+    }
+
+    public Mensajes getMensajes() {
+        return mensajes;
+    }
+
+    public void setMensajes(Mensajes mensajes) {
+        this.mensajes = mensajes;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public List<Autores> getListAutores() {

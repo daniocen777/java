@@ -1,17 +1,16 @@
 package dto;
 
-public class Usuarios {
+import java.io.Serializable;
+
+public class Usuarios implements Serializable{
 
     private Integer idusuario;
     private String apellidos;
-    private String nombres;
     private String usuario;
     private String password;
     //private byte[] password;
     private String autorizacion;
-
-    public Usuarios() {
-    }
+    private String nombres;
 
     public String getApellidos() {
         return apellidos;
@@ -21,12 +20,23 @@ public class Usuarios {
         this.apellidos = apellidos;
     }
 
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
+
     public String getAutorizacion() {
         return autorizacion;
     }
 
     public void setAutorizacion(String autorizacion) {
         this.autorizacion = autorizacion;
+    }
+
+    public Usuarios() {
     }
 
     public Integer getIdusuario() {
@@ -53,12 +63,4 @@ public class Usuarios {
         this.password = password;
     }
 
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
 }
-

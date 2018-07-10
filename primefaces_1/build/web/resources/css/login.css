@@ -1,6 +1,26 @@
-body {
+/*body {
     background-color: #ECF3FD;
 }
 .ui-state-default .icon-login{
     background-image: url(../images/icon/process.png);
+}*/
+
+body {
+    background-color: #F7F7F7;
+    font-size: 14px;
+    font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    color: #000000;
+    margin: 10px;
+}
+
+.login {
+    width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+}
+
+.lock-icon {
+    background-image: url("#{facesContext.externalContext.request.contextPath}/resources/images/icon/ic_lock.png") !important;
+    margin-right: 7px;    
 }

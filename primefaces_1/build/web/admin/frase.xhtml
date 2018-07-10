@@ -106,7 +106,9 @@
                         <h:panelGrid id="gridFrase" columns="3" cellpadding="5">
                             <!-- -->
                             <p:outputLabel value="Autor:" for="autoresCbo" />
-                            <p:selectOneMenu id="autoresCbo" value="#{frasesBean.id}" >
+                            <p:selectOneMenu id="autoresCbo" value="#{frasesBean.id}"
+                                             filter="true" filterMatchMode="startsWith"
+                                             effect="fold">
                                 <f:selectItem itemLabel="Select One" itemValue="" />
                                 <f:selectItems value="#{frasesBean.autoresCbo}" />
                             </p:selectOneMenu>
@@ -125,7 +127,9 @@
                                              update=":frasesQry, gridFrase, :growl, autoresCbo"
                                              />
                             <p:commandButton value="Cancelar"
-                                             oncomplete="PF('dialogFraseIns').hide();"/>
+                                             actionListener="#{frasesBean.prepararFrase()}"
+                                             oncomplete="PF('dialogFraseIns').hide();"
+                                             />
                         </h:panelGrid>
 
                     </p:dialog>
@@ -165,8 +169,10 @@
                         <h:panelGrid id="gridFraseUpd" columns="3" cellpadding="5">
                             <!-- -->
                             <p:outputLabel value="Autor:" for="autoresCbo" />
-                            <p:selectOneMenu id="autoresCbo" value="#{frasesBean.id}" >
-                                <f:selectItem itemLabel="#{frasesBean.frases.autores.autor}" itemValue="#{frasesBean.id}" />
+                            <p:selectOneMenu id="autoresCbo" value="#{frasesBean.id}" 
+                                             filter="true" filterMatchMode="startsWith"
+                                             effect="fold">
+                                <f:selectItem itemLabel="#{frasesBean.frases.autores.autor}" itemValue="#{frasesBean.frases.autores.idautor}" />
                                 <f:selectItems value="#{frasesBean.autoresCbo}" />
                             </p:selectOneMenu>
                             <p:message for="autoresCbo" />
@@ -180,11 +186,12 @@
 
                         <h:panelGrid columns="2" cellpadding="4" style="text-align: center; float: right">
                             <p:commandButton value="Modificar" ajax="true"
-                                             actionListener="#{frasesBean.frasesUpd()}"
+                                             action="#{frasesBean.frasesUpd()}"
                                              update=":frasesQry, gridFraseUpd, :growl, autoresCbo"
                                              />
                             <p:commandButton value="Cancelar"
-                                             oncomplete="PF('dialogFraseIns').hide();"/>
+                                             actionListener="#{frasesBean.prepararFrase()}"
+                                             oncomplete="PF('dialogFraseUpd').hide();"/>
                         </h:panelGrid>
 
                     </p:dialog>

@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -22,6 +23,10 @@
                 <p:panel>
                     <h:form>
                         <p:menubar>
+                            <p:submenu label="Mis Datos" icon="user-icon">
+                                <p:menuitem value="Usuarios" icon="contacts-icon" outcome="/admin//usuario"></p:menuitem>
+                                <p:menuitem value="Mi cuenta" icon="my-icon" url="#" />
+                            </p:submenu>
                             <p:submenu label="Gestor de Autores" icon="group-icon">
                                 <p:menuitem value="Autores" outcome="/admin//autor" icon="tools-icon"></p:menuitem>
                                 <p:menuitem value="Other" url="#" />
@@ -31,13 +36,35 @@
                                 <p:menuitem value="Frases" outcome="/admin//frase" icon="tools-icon"></p:menuitem>
                                 <p:menuitem value="Other" url="#" />
                             </p:submenu>
-                            <p:submenu label="Otro Gestor" icon="process-icon">
+                            <p:submenu label="Estadísticas" icon="process-icon">
                                 <p:menuitem value="Gráfico circular" outcome="/admin//pie" icon="pie-icon" />
                                 <p:menuitem value="Gráfico de barras" outcome="/admin//bar" icon="bar-icon"/>
                                 <p:menuitem value="Other" url="#" />
                             </p:submenu>
 
+                            <p:submenu label="Cerrar Sesión" icon="off-icon">
+                                <p:menuitem value="Salir" icon="out-icon" action="#{loginBean.cerrarSesion()}"></p:menuitem>
+                            </p:submenu>
+
                         </p:menubar>
+
+                        <!-- 
+                        <c:if test="#{loginBean.username == 'dani'}" >
+                            <p:breadCrumb>
+                                <p:menuitem value="Categories" url="#" />
+                                <p:menuitem value="Inicio" url="#" />
+                            </p:breadCrumb>
+                        </c:if>
+
+                        <c:if test="#{loginBean.username != 'dani'}">
+                            <p:breadCrumb>
+                                <p:menuitem value="Categories" url="#" />
+                                <p:menuitem value="Sports" url="#" />
+                                <p:menuitem value="Basketball" url="#" />
+                            </p:breadCrumb>
+                        </c:if>
+                        -->
+
                     </h:form>
                 </p:panel>
             </ui:insert>

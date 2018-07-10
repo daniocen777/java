@@ -26,6 +26,11 @@ public class FrasesBean implements Serializable {
     private Mensajes mensajes;
     private List<SelectItem> autoresCbo;
     private Integer id;
+    private String label;
+
+    public FrasesBean() {
+        mensajes = new Mensajes();
+    }
 
     public Integer getId() {
         return id;
@@ -37,6 +42,14 @@ public class FrasesBean implements Serializable {
 
     private String option;
     private List<String> options;
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
     public String getOption() {
         return option;
@@ -70,15 +83,6 @@ public class FrasesBean implements Serializable {
         this.autoresCbo = autoresCbo;
     }
 
-    public FrasesBean() {
-        mensajes = new Mensajes();
-        //options
-        options = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            options.add("Option " + i);
-        }
-    }
-
     public Frases getFrases() {
         return frases;
     }
@@ -107,6 +111,7 @@ public class FrasesBean implements Serializable {
 
     // Preparar autor
     public void prepararFrase() {
+        id = null;
         frases = new Frases();
         autores = new Autores();
     }
@@ -133,6 +138,7 @@ public class FrasesBean implements Serializable {
             if (msj == null) {
                 mensajes.growlMessageInfo("Se agregó la frase " + frases.getFrase().toUpperCase());
                 requestContext.execute("PF('dialogFraseIns').hide();");
+                id = null;
             } else {
                 mensajes.growlMessageError(daoFrases.getMessage());
             }
@@ -159,6 +165,7 @@ public class FrasesBean implements Serializable {
             if (msj == null) {
                 mensajes.growlMessageInfo("Se editó la frase " + frases.getFrase().toUpperCase());
                 requestContext.execute("PF('dialogFraseUpd').hide();");
+                id = null;
                 prepararFrase();
             } else {
                 mensajes.growlMessageError(daoFrases.getMessage());

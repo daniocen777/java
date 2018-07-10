@@ -1,9 +1,14 @@
 body {
-    background-color: #ffffff;
+    background-color: #F7F7F7;
     font-size: 12px;
     font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
     color: #000000;  
     margin: 10px;
+}
+
+.ui-panelgrid td, .ui-panelgrid tr
+{
+    border-style: none !important
 }
 
 h1 {
@@ -94,5 +99,31 @@ a:link:hover, a:visited:hover  {
     background-image: url("#{facesContext.externalContext.request.contextPath}/resources/images/icon/ic_bar.png") !important;
     margin-right: 7px;    
 }
+
+.off-icon {
+    background-image: url("#{facesContext.externalContext.request.contextPath}/resources/images/icon/ic_off.png") !important;
+    margin-right: 7px;    
+}
+
+.out-icon {
+    background-image: url("#{facesContext.externalContext.request.contextPath}/resources/images/icon/ic_out3.png") !important;
+    margin-right: 7px;    
+}
+
+.user-icon {
+    background-image: url("#{facesContext.externalContext.request.contextPath}/resources/images/icon/ic_user.png") !important;
+    margin-right: 7px;    
+}
+
+.contacts-icon {
+    background-image: url("#{facesContext.externalContext.request.contextPath}/resources/images/icon/ic_contacts.png") !important;
+    margin-right: 7px;    
+}
+
+.my-icon {
+    background-image: url("#{facesContext.externalContext.request.contextPath}/resources/images/icon/ic_mycount.png") !important;
+    margin-right: 7px;    
+}
+
 
 
