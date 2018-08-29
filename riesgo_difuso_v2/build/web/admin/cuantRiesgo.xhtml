@@ -1,0 +1,246 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+                <h:form id="formBtn">
+                    <p:commandButton value="Agregar" 
+                                     oncomplete="PF('dialogCuantRiesgoIns').show();"
+                                     update=":formCuantRiesgoIns"
+                                     styleClass="ui-priority-primary"
+                                     actionListener="#{cuantRiesgoBean.preparar()}"
+                                     icon="add-icon">
+                    </p:commandButton>
+                </h:form>
+
+                <p:separator />
+
+                <p:growl id="growl" showDetail="true" life="4000"/>
+
+                <!-- INICIO - Tabla, datos de cuantificar riesgo -->
+                <h:form id="cuantRiesgoQry">
+                    <p:dataTable id="cuantRiesgoTable" var="cuant"
+                                 value="#{cuantRiesgoBean.listCuantRiesgos}"
+                                 emptyMessage="No hay datos"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rows="5"
+                                 rowsPerPageTemplate="5,10,15"
+                                 rowKey="#{cuant.idcuantriesgo}"
+                                 selection="#{cuantRiesgoBean.cuantRiesgo}"
+                                 rowStyleClass="#{cuant.defu > 132.5 ? 'highlight1' : ''}" 
+                                 selectionMode="single"
+                                 paginatorPosition="bottom">
+                        <f:facet name="header">
+                            Evaluaciones de Riesgos
+                        </f:facet>
+
+                        <p:column style="text-align: center" width="100">
+                            <f:facet  name="header">
+                                <p:commandButton value="Eliminar" styleClass="ui-priority-primary"
+                                                 icon="delete-icon"
+
+                                                 update=":growl"/>
+
+                            </f:facet>
+                            <p:selectManyCheckbox id="selectCheck"
+                                                  valueChangeListener="#{cuantRiesgoBean.checkCuantRiesgo}">
+                                <f:selectItem itemValue="#{cuant.idcuantriesgo}" itemLabel="" />
+                            </p:selectManyCheckbox>
+                        </p:column>
+
+                        <p:column headerText="ACTIVO" style="text-align: center" width="150"
+                                  filterBy="#{cuant.salvaguarda_idsalvaguarda.actEspec.nombactespec}" filterMatchMode="contains">
+                            <h:outputText value="#{cuant.salvaguarda_idsalvaguarda.actEspec.nombactespec}"/>
+                        </p:column>
+
+                        <p:column headerText="AMENAZA" style="text-align: center" width="100">
+                            <h:outputText value="#{cuant.salvaguarda_idsalvaguarda.amenaza.amenaza}"/>
+                        </p:column>
+
+                        <p:column headerText="VALOR DE AMENAZA" style="text-align: center">
+                            <h:outputText value="#{cuant.valoramenaza}">
+                                <f:converter converterId="valor" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="VALOR DE IMPACTO" style="text-align: center">
+                            <h:outputText value="#{cuant.valorimpacto}" >
+                                <f:converter converterId="valor" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="VALOR DE VULNERABILIDAD" style="text-align: center">
+                            <h:outputText value="#{cuant.valorvulner}">
+                                <f:converter converterId="valor" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="FECHA DE REGISTRO" style="text-align: center"
+                                  filterBy="#{cuant.fecreg}" filterMatchMode="contains">
+                            <h:outputText value="#{cuant.fecreg}">
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="DEFUZI" style="text-align: center">
+                            <h:outputText value="#{cuant.defu}"/>
+                        </p:column>
+
+                        <p:column headerText="RIESGO" style="text-align: center"
+                                  filterBy="#{cuant.rie}" filterMatchMode="contains">
+                            <h:outputText value="#{cuant.rie}"/>
+                        </p:column>
+
+                        <p:column style="text-align: center" width="45">
+                            <p:commandButton  title="Editar" 
+
+
+                                              icon="edit-icon">
+
+                            </p:commandButton>
+                        </p:column>
+
+                        <p:column style="text-align: center" width="45">
+                            <p:commandButton  icon="trash-icon" title="Eliminar" 
+
+                                              >
+
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:contextMenu for="cuantRiesgoTable">
+                        <p:menuitem value="Ver" update="cuantRiesgoDetail" icon="ui-icon-search" oncomplete="PF('cuantRiesgoDialog').show()"/>
+                    </p:contextMenu>
+
+                    <p:dialog header="Información de Activo" widgetVar="cuantRiesgoDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="cuantRiesgoDetail" style="text-align:center;">
+                            <p:panelGrid  columns="2" rendered="#{not empty cuantRiesgoBean.cuantRiesgo}" columnClasses="label,value">
+                                <h:outputText value="Id:" />
+                                <h:outputText value="#{cuantRiesgoBean.cuantRiesgo.idcuantriesgo}" /> 
+
+                                <h:outputText value="Activo:" />
+                                <h:outputText value="#{cuantRiesgoBean.cuantRiesgo.salvaguarda_idsalvaguarda.actEspec.nombactespec}"/>
+
+                                <h:outputText value="Amenaza" />
+                                <h:outputText value="#{cuantRiesgoBean.cuantRiesgo.salvaguarda_idsalvaguarda.amenaza.amenaza}" /> 
+
+                                <h:outputText value="Defu:" />
+                                <h:outputText value="#{cuantRiesgoBean.cuantRiesgo.defu}" /> 
+
+                                <h:outputText value="Riesgo:" />
+                                <h:outputText value="#{cuantRiesgoBean.cuantRiesgo.rie}" /> 
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Tabla, datos de cuantificar riesgo -->
+
+                <!-- INICIO - Insertar -->
+                <h:form id="formCuantRiesgoIns">
+                    <p:dialog id="dlgCuantRiesgoIns" widgetVar="dialogCuantRiesgoIns" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Nuevo Registro">
+
+                        <h:panelGrid id="gridCuantRiesgo" columns="3" cellpadding="4">
+
+                            <p:outputLabel value="Activo" for="activoCbo"/>
+                            <p:selectOneMenu id="activoCbo" value="#{cuantRiesgoBean.activoId}"
+                                             filter="true" filterMatchMode="startsWith"
+                                             effect="fold" required="true" requiredMessage="Agregar activo">
+                                <f:selectItem itemLabel="[.. Seleccione ..]" itemValue="" />
+                                <f:selectItems value="#{cuantRiesgoBean.activosCbo}" />
+                                <p:ajax update="activoEspecCbo" />
+                            </p:selectOneMenu>
+                            <p:message for="activoCbo" />
+
+                            <p:outputLabel value="Activo Espec." for="activoEspecCbo"/>
+                            <p:selectOneMenu id="activoEspecCbo" value="#{cuantRiesgoBean.actEspecId}"
+                                             filter="true" filterMatchMode="startsWith"
+                                             effect="fold" required="true" requiredMessage="Agregar activo espec." >
+                                <f:selectItem itemLabel="[.. Seleccione ..]" itemValue="" />
+                                <f:selectItems value="#{cuantRiesgoBean.actEspecCbo}" />
+                                <p:ajax update="amenazaCbo" />
+                            </p:selectOneMenu>
+                            <p:message for="activoEspecCbo" />
+
+                            <p:outputLabel value="Amenaza" for="amenazaCbo"/>
+                            <p:selectOneMenu id="amenazaCbo" value="#{cuantRiesgoBean.salvaguarda.idsalvaguarda}"
+                                             filter="true" filterMatchMode="startsWith"
+                                             effect="fold" required="true" requiredMessage="Agregar amenaza" >
+                                <f:selectItem itemLabel="[.. Seleccione ..]" itemValue="" />
+                                <f:selectItems value="#{cuantRiesgoBean.amenazaCbo}" />
+                                <p:ajax update="amenazaCbo" />
+                            </p:selectOneMenu>
+                            <p:message for="amenazaCbo" />
+
+                            <p:outputLabel value="Valor Amenaza" for="valorAmenaza"/>
+                            <p:selectOneMenu id="valorAmenaza" value="#{cuantRiesgoBean.cuantRiesgo.valoramenaza}"
+                                             effect="fold" required="true" requiredMessage="Agregar valor" >
+                                <f:selectItem itemLabel="[.. Seleccione ..]" itemValue="" />
+                                <f:selectItem itemLabel="MUY BAJO" itemValue="MB" />
+                                <f:selectItem itemLabel="BAJO" itemValue="B" />
+                                <f:selectItem itemLabel="MEDIO" itemValue="M" />
+                                <f:selectItem itemLabel="ALTO" itemValue="A" />
+                                <f:selectItem itemLabel="MUY ALTO" itemValue="MA" />
+                            </p:selectOneMenu>
+                            <p:message for="valorAmenaza" />
+
+                            <p:outputLabel value="Valor Impacto" for="valorImpacto"/>
+                            <p:selectOneMenu id="valorImpacto" value="#{cuantRiesgoBean.cuantRiesgo.valorimpacto}"
+                                             effect="fold" required="true" requiredMessage="Agregar valor" >
+                                <f:selectItem itemLabel="[.. Seleccione ..]" itemValue="" />
+                                <f:selectItem itemLabel="MUY BAJO" itemValue="MB" />
+                                <f:selectItem itemLabel="BAJO" itemValue="B" />
+                                <f:selectItem itemLabel="MEDIO" itemValue="M" />
+                                <f:selectItem itemLabel="ALTO" itemValue="A" />
+                                <f:selectItem itemLabel="MUY ALTO" itemValue="MA" />
+                            </p:selectOneMenu>
+                            <p:message for="valorImpacto" />
+
+                            <p:outputLabel value="Valor Vulnerabilidad" for="valorVulnerabilidad"/>
+                            <p:selectOneMenu id="valorVulnerabilidad" value="#{cuantRiesgoBean.cuantRiesgo.valorvulner}"
+                                             effect="fold" required="true" requiredMessage="Agregar valor" >
+                                <f:selectItem itemLabel="[.. Seleccione ..]" itemValue="" />
+                                <f:selectItem itemLabel="MUY BAJO" itemValue="MB" />
+                                <f:selectItem itemLabel="BAJO" itemValue="B" />
+                                <f:selectItem itemLabel="MEDIO" itemValue="M" />
+                                <f:selectItem itemLabel="ALTO" itemValue="A" />
+                                <f:selectItem itemLabel="MUY ALTO" itemValue="MA" />
+                            </p:selectOneMenu>
+                            <p:message for="valorVulnerabilidad" />
+
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="text-align: center; float: right">
+                            <p:commandButton value="Guardar" ajax="true"
+                                             actionListener="#{cuantRiesgoBean.cuantRiesgoIns()}"
+                                             update=":cuantRiesgoQry, gridCuantRiesgo, :growl, activoCbo, activoEspecCbo, amenazaCbo, valorVulnerabilidad"
+                                             />
+                            <p:commandButton value="Cancelar"
+                                             immediate="true"
+
+                                             oncomplete="PF('dialogCuantRiesgoIns').hide();"
+                                             />
+                        </h:panelGrid>
+
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Insertar -->
+            </ui:define>      
+
+        </ui:composition>
+
+    </body>
+</html>

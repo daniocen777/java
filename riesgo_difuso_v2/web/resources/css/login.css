@@ -1,0 +1,43 @@
+/*body {
+    background-color: #ECF3FD;
+}
+.ui-state-default .icon-login{
+    background-image: url(../images/icon/process.png);
+}*/
+
+body {
+    background-image: url(../images/watergrass.png);
+    font-size: 14px;
+    font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    opacity: 0.7;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;   
+    margin: 10px;
+    background-size: cover;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+}
+
+.login {
+    width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+}
+
+.login2 {
+    width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+}
+
+.lock-icon {
+    background-image: url("#{facesContext.externalContext.request.contextPath}/resources/images/icon/ic_lock.png") !important;
+    margin-right: 7px;    
+}

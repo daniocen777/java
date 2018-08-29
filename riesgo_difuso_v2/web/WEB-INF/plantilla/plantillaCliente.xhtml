@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="./css/default.css"/>
+        <h:outputStylesheet name="./css/cssLayout.css"/>
+        <title>Facelets Template</title>
+    </h:head>
+
+    <h:body>
+
+        <div id="top">
+            <ui:insert name="top">
+                <p:panel>
+                    <p:graphicImage url="/resources/images/ic_d.png" width="40px"
+                                    style="text-align: left; margin: 0px 0px 0px 0px;" />
+                </p:panel>
+
+                <h:form>
+                    <p:menubar>
+                        <p:submenu label="Inicio" icon="home-icon">
+                            
+                        </p:submenu>
+
+                        <p:submenu label="Gestor de Activos" icon="act_mult-icon">
+                            <p:menuitem value="Activos" icon="tablet-icon" action="activos.xhtml?faces-redirect=true"></p:menuitem>
+                            <p:menuitem value="Act. Específicos " outcome="/client//actEspec" icon="espec-icon" />
+                        </p:submenu>
+
+                        <p:submenu label="Gestor de Amenazas" icon="amenaza-icon">
+                            <p:menuitem value="Ver Categorías" outcome="/client//catDeRiesgo" icon="eye-icon"></p:menuitem>
+                            <p:menuitem value="Amenazas" outcome="/client//amenaza" icon="poison-icon" />
+                        </p:submenu>
+
+                        <p:submenu label="Cerrar Sesión" icon="off-icon">
+                            <p:menuitem value="Salir" icon="out-icon" action="#{loginBean.cerrarSesion()}"></p:menuitem>
+                        </p:submenu>
+                    </p:menubar>
+                </h:form>
+            </ui:insert>
+        </div>
+
+        <div id="content" class="center_content">
+            <ui:insert name="content">Content</ui:insert>
+        </div>
+
+        <div id="bottom">
+            <ui:insert name="bottom">
+                <div align="center">
+                    &copy; DaniCode 2018
+                </div>
+            </ui:insert>
+        </div>
+
+    </h:body>
+
+</html>

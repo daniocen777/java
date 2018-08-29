@@ -1,0 +1,266 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+                <h:form id="formBtn">
+                    <p:commandButton value="Agregar" 
+                                     oncomplete="PF('dialogAmenazaIns').show();"
+                                     update=":formAmenazaIns"
+                                     styleClass="ui-priority-primary"
+                                     actionListener="#{amenazaBean.prepararAmenaza()}"
+                                     icon="add-icon">
+                    </p:commandButton>
+                </h:form>
+
+                <p:separator />
+
+                <p:growl id="growl" showDetail="true" life="4000"/>
+
+                <!-- INICIO - Tabla, datos de amenazas -->
+                <h:form id="amenazaQry">
+                    <p:dataTable id="amenazaTable" var="amen"
+                                 value="#{amenazaBean.listAmenaza}"
+                                 emptyMessage="No hay datos"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rows="5"
+                                 rowsPerPageTemplate="5,10,15"
+                                 rowKey="#{amen.idamenaza}"
+                                 selection="#{amenazaBean.amenaza}"
+                                 selectionMode="single"
+                                 paginatorPosition="bottom">
+                        <f:facet name="header">
+                            Lista de Amenazas
+                        </f:facet>
+
+                        <p:column style="text-align: center" width="100">
+                            <f:facet  name="header">
+                                <p:commandButton value="Eliminar" styleClass="ui-priority-primary"
+                                                 icon="delete-icon"
+                                                 actionListener="#{amenazaBean.entrar()}"
+                                                 update=":growl"/>
+                            </f:facet>
+
+                            <p:selectManyCheckbox id="selectCheck"
+                                                  valueChangeListener="#{amenazaBean.checkAmenaza}">
+                                <f:selectItem itemValue="#{amen.idamenaza}" itemLabel="" />
+                            </p:selectManyCheckbox>
+                        </p:column>
+
+                        <p:column headerText="CATEGORÍA" style="text-align: center" width="150"
+                                  filterBy="#{amen.catDeRiesgo.categoria}" filterMatchMode="contains">
+                            <h:outputText value="#{amen.catDeRiesgo.categoria}"/>
+                        </p:column>
+
+                        <p:column headerText="AMENAZA" style="text-align: center"
+                                  filterBy="#{amen.amenaza}" filterMatchMode="contains">
+                            <h:outputText value="#{amen.amenaza}"/>
+                        </p:column>
+
+                        <p:column headerText="CONSECUENCIA" style="text-align: center">
+                            <h:outputText value="#{amen.consecuencia}"/>
+                        </p:column>
+
+                        <p:column style="text-align: center" width="100">
+                            <p:commandButton value="Editar" title="Editar" 
+                                             oncomplete="PF('dialogAmenazaUpd').show()"
+                                             update=":formAmenazaUpd"
+                                             icon="edit-icon">
+                                <f:setPropertyActionListener target="#{amenazaBean.amenaza}" value="#{amen}" />
+                            </p:commandButton>
+                        </p:column>
+
+                        <p:column style="text-align: center" width="100">
+                            <p:commandButton value="Eliminar" icon="trash-icon" title="Eliminar" 
+                                             oncomplete="PF('dialogAmenazaDel').show()"
+                                             update=":formAmenazaDel">
+                                <f:setPropertyActionListener target="#{amenazaBean.amenaza}" value="#{amen}" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:contextMenu for="amenazaTable">
+                        <p:menuitem value="Ver" update="amenazaDetail" icon="ui-icon-search" oncomplete="PF('amenazaDialog').show()"/>
+                    </p:contextMenu>
+
+                    <p:dialog header="Información de Amenaza" widgetVar="amenazaDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="amenazaDetail" style="text-align:center;">
+                            <p:panelGrid  columns="2" rendered="#{not empty amenazaBean.amenaza}" columnClasses="label,value">
+                                <h:outputText value="Id de amenaza:" />
+                                <h:outputText value="#{amenazaBean.amenaza.idamenaza}" /> 
+
+                                <h:outputText value="Id categoría:" />
+                                <h:outputText value="#{amenazaBean.amenaza.catDeRiesgo.idcatderiesgo}"/>
+
+                                <h:outputText value="Categoría" />
+                                <h:outputText value="#{amenazaBean.amenaza.catDeRiesgo.categoria}" /> 
+
+                                <h:outputText value="Amenaza:" />
+                                <h:outputText value="#{amenazaBean.amenaza.amenaza}" /> 
+
+                                <h:outputText value="Consecuencia:" />
+                                <h:outputText value="#{amenazaBean.amenaza.consecuencia}" /> 
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Tabla, datos de amenazas -->
+
+                <!-- INICIO - Eliminar amenaza masivamente -->
+                <h:form id="formAmenazaDelMult">
+                    <p:dialog id="dlgAmenazaDelMult" widgetVar="dialogAmenazaDelMult" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Eliminar Registros">
+                        <h:panelGrid columns="1" cellpadding="4">
+                            <p:outputLabel value="¿Desea eliminar los registros?" style="text-align: center"/>
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="float: right">
+                            <p:commandButton value="Sí" action="#{amenazaBean.amenazaDelMult()}"
+                                             update=":amenazaQry, :growl"
+                                             oncomplete="PF('dialogAmenazaDelMult').hide();"/>
+                            <p:commandButton value="No" oncomplete="PF('dialogAmenazaDelMult').hide();"/>
+                        </h:panelGrid>
+                    </p:dialog>
+
+                </h:form>
+                <!-- FIN - Eliminar amenaza masivamente -->
+
+                <!-- INICIO - Insertar amenaza -->
+                <h:form id="formAmenazaIns">
+                    <p:dialog id="dlgAmenazaIns" widgetVar="dialogAmenazaIns" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Nuevo Registro">
+                        <h:panelGrid id="gridAmenaza" columns="3" cellpadding="4">
+                            <p:outputLabel value="Categoría" for="cateRiesgo" style="padding-left: 27px"/>
+                            <p:selectOneMenu id="cateRiesgo" value="#{amenazaBean.id}"
+                                             filter="true" filterMatchMode="startsWith"
+                                             effect="fold" required="true" requiredMessage="Agregar categoría">
+                                <f:selectItem itemLabel="[.. Seleccione ..]" itemValue="" />
+                                <f:selectItem itemLabel="GESTIÓN" itemValue="1" />
+                                <f:selectItem itemLabel="OPERACIÓN" itemValue="2" />
+                                <f:selectItem itemLabel="INFRAESTRUCTURA" itemValue="3" />
+                                <f:selectItem itemLabel="SEGURIDAD" itemValue="4" />
+                                <f:selectItem itemLabel="RECURSO HUMANO" itemValue="5" />
+                            </p:selectOneMenu>
+                            <p:message for="cateRiesgo" />
+
+                            <p:outputLabel value="Amenaza" for="txt_amenaza" style="padding-left: 27px"/>
+                            <p:inputText id="txt_amenaza" value="#{amenazaBean.amenaza.amenaza}"
+                                         required="true" requiredMessage="Ingrese amenaza" style="width: 267px"/>
+                            <p:message for="txt_amenaza" />
+
+                            <p:outputLabel value="Consecuencia" for="txt_consecuencia"/>
+                            <p:inputTextarea id="txt_consecuencia" value="#{amenazaBean.amenaza.consecuencia}"
+                                             rows="8" cols="30" counter="display"
+                                             required="true" requiredMessage="Ingrese consecuencia"
+                                             maxlength="100" counterTemplate="{0} caracteres restantes." 
+                                             autoResize="false"  />
+                            <h:outputText id="display" />
+                            <p:message for="txt_consecuencia" />
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="text-align: center; float: right">
+                            <p:commandButton value="Guardar" ajax="true"
+                                             actionListener="#{amenazaBean.amenazaIns()}"
+                                             update=":amenazaQry, gridAmenaza, :growl, cateRiesgo"
+                                             />
+                            <p:commandButton value="Cancelar"
+                                             immediate="true"
+                                             
+                                             oncomplete="PF('dialogAmenazaIns').hide();"
+                                             />
+                        </h:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Insertar amenaza -->
+
+                <!-- INICIO - Eliminar amenazac -->
+                <h:form id="formAmenazaDel">
+                    <p:dialog id="dlgAmenazaDel" widgetVar="dialogAmenazaDel" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Eliminar Registro">
+                        <h:panelGrid columns="1" cellpadding="4">
+                            <p:outputLabel value="¿Desea eliminar registro?" style="text-align: center"/>
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="float: right">
+                            <p:commandButton value="Sí" actionListener="#{amenazaBean.amenazaDel()}"
+                                             update=":amenazaQry, :growl"
+                                             oncomplete="PF('dialogAmenazaDel').hide();"/>
+                            <p:commandButton value="No" oncomplete="PF('dialogAmenazaDel').hide();"/>
+                        </h:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Eliminar amenaza -->
+
+                <!-- INICIO - Editar  amenaza -->
+                <h:form id="formAmenazaUpd">
+                    <p:dialog id="dlgAmenazaUpd" widgetVar="dialogAmenazaUpd" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Editar Registro">
+                        <h:panelGrid id="gridAmenazaUpd" columns="3" cellpadding="4">
+                            <p:outputLabel value="Categoría" for="cateRiesgo"/>
+                            <p:selectOneMenu id="cateRiesgo" value="#{amenazaBean.id}"
+                                             filter="true" filterMatchMode="startsWith"
+                                             effect="fold" required="true" requiredMessage="Agregar categoría">
+                                <f:selectItem itemLabel="#{amenazaBean.amenaza.catDeRiesgo.categoria}" itemValue="#{amenazaBean.amenaza.catDeRiesgo.idcatderiesgo}" />
+                                <f:selectItem itemLabel="GESTIÓN" itemValue="1" />
+                                <f:selectItem itemLabel="OPERACIÓN" itemValue="2" />
+                                <f:selectItem itemLabel="INFRAESTRUCTURA" itemValue="3" />
+                                <f:selectItem itemLabel="SEGURIDAD" itemValue="4" />
+                                <f:selectItem itemLabel="RECURSO HUMANO" itemValue="5" />
+                            </p:selectOneMenu>
+                            <p:message for="cateRiesgo" />
+
+                            <p:outputLabel value="Amenaza:" for="txt_amenaza" />
+                            <p:inputText id="txt_amenaza" value="#{amenazaBean.amenaza.amenaza}"
+                                         required="true" requiredMessage="Ingrese amenaza"/>
+                            <p:message for="txt_amenaza" />
+
+                            <p:outputLabel value="Consecuencia" for="txt_consecuencia" />
+                            <p:inputTextarea id="txt_consecuencia" value="#{amenazaBean.amenaza.consecuencia}"
+                                             rows="5" cols="20" counter="display"
+                                             required="true" requiredMessage="Ingrese consecuencia"
+                                             maxlength="100" counterTemplate="{0} caracteres restantes." 
+                                             autoResize="false"  />
+                            <h:outputText id="display" />
+                            <p:message for="txt_consecuencia" />
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="float: right">
+                            <p:commandButton value="Modificar" 
+                                             actionListener="#{amenazaBean.amenazaUpd()}" 
+                                             update=":amenazaQry, :growl"
+                                             ajax="true"/>
+                            <p:commandButton value="Cancelar" 
+                                             immediate="true"
+                                             
+                                             oncomplete="PF('dialogAmenazaUpd').hide();"/>
+                        </h:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Editar amenaza -->
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

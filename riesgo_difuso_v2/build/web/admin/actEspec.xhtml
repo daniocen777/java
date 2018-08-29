@@ -1,0 +1,323 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+                <h:form id="formBtn">
+                    <p:commandButton value="Agregar Masivamente" 
+                                     oncomplete="PF('dialogActEspecInsMult').show();"
+                                     update=":form"
+                                     styleClass="ui-priority-primary"
+                                     actionListener="#{actEspecbean.prepararActEspec()}"
+                                     icon="add_mult-icon">
+                    </p:commandButton>
+
+                    <p:commandButton value="Agregar" 
+                                     oncomplete="PF('dialogActEspecIns').show();"
+                                     update=":formActEspecIns"
+                                     styleClass="ui-priority-primary"
+                                     actionListener="#{actEspecbean.prepararActEspec()}"
+                                     icon="add-icon">
+                    </p:commandButton>
+                </h:form>
+
+                <p:separator />
+
+                <p:growl id="growl" showDetail="true" life="4000"/>
+
+                <!-- INICIO - Tabla, datos de activos específicos -->
+                <h:form id="actEspecQry">
+                    <p:dataTable id="actEspecTable" var="actEsp"
+                                 value="#{actEspecbean.listActEspec}"
+                                 emptyMessage="No hay datos"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rows="5"
+                                 rowsPerPageTemplate="5,10,15"
+                                 rowKey="#{actEsp.idactespec}"
+                                 selection="#{actEspecbean.actEspec}"
+                                 selectionMode="single"
+                                 paginatorPosition="bottom">
+                        <f:facet name="header">
+                            Lista de Activos Específicos
+                        </f:facet>
+
+                        <p:column style="text-align: center" width="100">
+                            <f:facet  name="header">
+                                <p:commandButton value="Eliminar" styleClass="ui-priority-primary"
+                                                 icon="delete-icon"
+                                                 actionListener="#{actEspecbean.entrar()}"
+                                                 update=":growl"/>
+
+                            </f:facet>
+                            <p:selectManyCheckbox id="selectCheck"
+                                                  valueChangeListener="#{actEspecbean.checkActEspec}">
+                                <f:selectItem itemValue="#{actEsp.idactespec}" itemLabel="" />
+                            </p:selectManyCheckbox>
+                        </p:column>
+
+                        <p:column headerText="ACTIVO" style="text-align: center" width="150"
+                                  filterBy="#{actEsp.activo.nombactivo}" filterMatchMode="contains">
+                            <h:outputText value="#{actEsp.activo.nombactivo}"/>
+                        </p:column>
+
+                        <p:column headerText="TIPO" style="text-align: center" width="100"
+                                  filterBy="#{actEsp.activo.tipo}" filterMatchMode="contains">
+                            <h:outputText value="#{actEsp.activo.tipo}"/>
+                        </p:column>
+
+                        <p:column headerText="ACTIVO ESPEC." style="text-align: center"
+                                  filterBy="#{actEsp.nombactespec}" filterMatchMode="contains">
+                            <h:outputText value="#{actEsp.nombactespec}"/>
+                        </p:column>
+
+                        <p:column style="text-align: center" width="100">
+                            <p:commandButton value="Editar" title="Editar" 
+                                             oncomplete="PF('dialogActEspecUpd').show()"
+                                             update=":formActEspecUpd"
+                                             icon="edit-icon">
+                                <f:setPropertyActionListener target="#{actEspecbean.actEspec}" value="#{actEsp}" />
+                            </p:commandButton>
+                        </p:column>
+
+                        <p:column style="text-align: center" width="100">
+                            <p:commandButton value="Eliminar" icon="trash-icon" title="Eliminar" 
+                                             oncomplete="PF('dialogActEspecDel').show()"
+                                             update=":formActEspecDel">
+                                <f:setPropertyActionListener target="#{actEspecbean.actEspec}" value="#{actEsp}" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:contextMenu for="actEspecTable">
+                        <p:menuitem value="Ver" update="actEspecDetail" icon="ui-icon-search" oncomplete="PF('actEspecDialog').show()"/>
+                    </p:contextMenu>
+
+                    <p:dialog header="Información de Activo" widgetVar="actEspecDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="actEspecDetail" style="text-align:center;">
+                            <p:panelGrid  columns="2" rendered="#{not empty actEspecbean.actEspec}" columnClasses="label,value">
+                                <h:outputText value="Id Act. Espec.:" />
+                                <h:outputText value="#{actEspecbean.actEspec.idactespec}" /> 
+
+                                <h:outputText value="Id Activo:" />
+                                <h:outputText value="#{actEspecbean.actEspec.activo.idactivo}"/>
+
+                                <h:outputText value="ACTIVO:" />
+                                <h:outputText value="#{actEspecbean.actEspec.activo.nombactivo}" /> 
+
+                                <h:outputText value="Tipo:" />
+                                <h:outputText value="#{actEspecbean.actEspec.activo.tipo}" /> 
+
+                                <h:outputText value="Act. Espec.:" />
+                                <h:outputText value="#{actEspecbean.actEspec.nombactespec}" /> 
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Tabla, datos de activos específicos -->
+
+                <!-- INICIO - Eliminar activos específicos masivamente -->
+                <h:form id="formActivoEspecDelMult">
+                    <p:dialog id="dlgActivoEspecDelMult" widgetVar="dialogActivoEspecDelMult" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Eliminar Registros">
+                        <h:panelGrid columns="1" cellpadding="4">
+                            <p:outputLabel value="¿Desea eliminar registros?" style="text-align: center"/>
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="float: right">
+                            <p:commandButton value="Sí" action="#{salvaguardaBean.salvaguardaDelMultiple()}"
+                                             update=":actEspecQry, :growl"
+                                             oncomplete="PF('dialogActivoEspecDelMult').hide();"/>
+                            <p:commandButton value="No" oncomplete="PF('dialogActivoEspecDelMult').hide();"/>
+                        </h:panelGrid>
+                    </p:dialog>
+
+                </h:form>
+                <!-- FIN - Eliminar activos específicos masivamente -->
+
+                <!-- INICIO - Eliminar activo específico -->
+                <h:form id="formActEspecDel">
+                    <p:dialog id="dlgActEspecDel" widgetVar="dialogActEspecDel" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Eliminar Registro">
+
+                        <h:panelGrid columns="1" cellpadding="4">
+                            <p:outputLabel value="¿Desea eliminar registro?" style="text-align: center"/>
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="float: right">
+                            <p:commandButton value="Sí" actionListener="#{actEspecbean.actEspecDel()}"
+                                             update=":actEspecQry, :growl"
+                                             oncomplete="PF('dialogActEspecDel').hide();"/>
+                            <p:commandButton value="No" oncomplete="PF('dialogActEspecDel').hide();"/>
+                        </h:panelGrid>
+
+                    </p:dialog>
+
+                </h:form>
+                <!-- FIN - Eliminar activo específico -->
+
+                <!-- INICIO - Insertar activo específico -->
+                <h:form id="formActEspecIns">
+                    <p:dialog id="dlgActEspecIns" widgetVar="dialogActEspecIns" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Nuevo Registro">
+
+                        <h:panelGrid id="gridActEspec" columns="3" cellpadding="4">
+                            <p:outputLabel value="Activo" for="activoCbo"/>
+                            <p:selectOneMenu id="activoCbo" value="#{actEspecbean.id}"
+                                             filter="true" filterMatchMode="startsWith"
+                                             effect="fold" required="true" requiredMessage="Agregar activo">
+                                <f:selectItem itemLabel="[.. Seleccione ..]" itemValue="" />
+                                <f:selectItems value="#{actEspecbean.activosCbo}" />
+                            </p:selectOneMenu>
+                            <p:message for="activoCbo" />
+
+                            <p:outputLabel value="Act. Específico" for="actEsp" />
+                            <p:inputText id="actEsp" value="#{actEspecbean.actEspec.nombactespec}"
+                                         required="true" requiredMessage="Ingrese activo específico"/>
+                            <p:message for="actEsp" />
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="text-align: center; float: right">
+                            <p:commandButton value="Guardar" ajax="true"
+                                             actionListener="#{actEspecbean.actEspecIns()}"
+                                             update=":actEspecQry, gridActEspec, :growl, activoCbo"
+                                             />
+                            <p:commandButton value="Cancelar"
+                                             immediate="true"
+                                             
+                                             oncomplete="PF('dialogActEspecIns').hide();"
+                                             />
+                        </h:panelGrid>
+
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Insertar activo específico -->
+
+                <!-- INICIO - Editar  activo específico -->
+                <h:form id="formActEspecUpd">
+                    <p:dialog id="dlgActEspecUpd" widgetVar="dialogActEspecUpd" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Editar Registro">
+
+                        <h:panelGrid id="gridActEspecUpd" columns="3" cellpadding="4">
+                            <p:outputLabel value="Activo" for="activoCbo"/>
+                            <p:selectOneMenu id="activoCbo" value="#{actEspecbean.id}"
+                                             filter="true" filterMatchMode="startsWith"
+                                             effect="fold" required="true" requiredMessage="Agregar activo">
+                                <f:selectItem itemLabel="#{actEspecbean.actEspec.activo.nombactivo}" itemValue="#{actEspecbean.actEspec.activo.idactivo}" />
+                                <f:selectItems value="#{actEspecbean.activosCbo}" />
+                            </p:selectOneMenu>
+                            <p:message for="activoCbo" />
+
+                            <p:outputLabel value="Act. Específico" for="actEsp" />
+                            <p:inputText id="actEsp" value="#{actEspecbean.actEspec.nombactespec}"
+                                         required="true" requiredMessage="Ingrese activo específico"/>
+                            <p:message for="actEsp" />
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="text-align: center; float: right">
+                            <p:commandButton value="Modificar" ajax="true"
+                                             actionListener="#{actEspecbean.actEspecUpd()}"
+                                             update=":actEspecQry, gridActEspecUpd, :growl, activoCbo"
+                                             />
+                            <p:commandButton value="Cancelar"
+                                             immediate="true"
+                                             update="formActEspecUpd"
+                                             oncomplete="PF('dialogActEspecUpd').hide();"/>
+                        </h:panelGrid>
+
+                    </p:dialog>
+                </h:form>
+                <!-- FIN- Editar activo específico -->
+
+                <!-- INICIO - INSERTAR MÚLTIPLE-->
+                <h:form id="form">
+                    <p:growl id="msgs" showDetail="false" />
+                    <p:dialog id="dlgActEspecDelMult" widgetVar="dialogActEspecInsMult" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              width="500" height="300" header="Insertar Activos Específicos">
+                        <p:panel style="margin-bottom:20px;">
+                            <h:panelGrid columns="3" cellpadding="5" >
+                                <p:outputLabel value="Activo" for="activoCbo2"/>
+                                <p:selectOneMenu id="activoCbo2" value="#{actEspecbean.id}"
+                                                 filter="true" filterMatchMode="startsWith"
+                                                 effect="fold" required="true" requiredMessage="Agregar activo">
+                                    <f:selectItem itemLabel="[.. Seleccione ..]" itemValue="" />
+                                    <f:selectItems value="#{actEspecbean.activosCbo}" />
+                                </p:selectOneMenu>
+                                <p:message for="activoCbo2" />
+
+                                <p:outputLabel value="Act. Específico" for="actEsp" />
+                                <p:inputText id="actEsp" value="#{actEspecbean.actEspec.nombactespec}" style="width: 330px"
+                                             required="true" requiredMessage="Ingrese activo específico"/>
+                                <p:message for="actEsp" />
+
+                                <f:facet name = "footer">
+                                    <h:panelGroup style = "display:block; text-align:center">
+                                        <p:commandButton id="btn_add" style="width: 100%" value="Agregar" update="act @parent" action="#{actEspecbean.reinit()}" >
+                                            <p:collector value="#{actEspecbean.actEspec}" addTo="#{actEspecbean.listActEspecIns}" unique="true"/>
+                                        </p:commandButton>
+                                    </h:panelGroup>
+                                </f:facet>
+                            </h:panelGrid>
+                        </p:panel>
+
+                        <p:outputPanel id="act">
+                            <p:dataTable value="#{actEspecbean.listActEspecIns}" var="ac" id="actTable"
+                                         emptyMessage="No hay datos para agregar">
+
+                                <p:column headerText="Activo">
+                                    <h:outputText value="#{ac.activo.nombactivo}" />
+                                </p:column>
+
+                                <p:column headerText="Activo Específico">
+                                    <h:outputText value="#{ac.nombactespec}" />
+                                </p:column>
+
+                                <p:column headerText="Acción">
+                                    <p:commandLink value="Remover" update=":form:act" process=":form:act">
+                                        <p:collector value="#{ac}" removeFrom="#{actEspecbean.listActEspecIns}" unique="true"/>
+                                    </p:commandLink>
+                                </p:column>
+
+                            </p:dataTable>
+
+                        </p:outputPanel>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="text-align: center; float: right">
+                            <p:commandButton value="Enviar Datos" ajax="true"
+                                             actionListener="#{actEspecbean.actEspecInsMult()}"
+                                             update=":actEspecQry, :growl"/>
+                        </h:panelGrid>
+                    </p:dialog>
+
+                </h:form>
+                <!-- FIN - INSERTAR MÚLTIPLE -->
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

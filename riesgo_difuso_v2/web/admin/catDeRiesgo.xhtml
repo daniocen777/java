@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+                <!-- INICIO - Tabla, datos de CATEGORÍAS -->
+                <h:form id="catDeRiesgoQry">
+                    <p:dataTable id="catDeRiesgoTable" var="cat"
+                                 value="#{catDeRiesgoBean.listCatDeRiesgo}"
+                                 emptyMessage="No hay datos"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rows="5"
+                                 rowsPerPageTemplate="5,10,15"
+                                 rowKey="#{cat.idcatderiesgo}"
+                                 selection="#{catDeRiesgoBean.catDeRiesgo}"
+                                 selectionMode="single"
+                                 paginatorPosition="bottom">
+                        <f:facet name="header">
+                            Lista de Categorías
+                        </f:facet>
+
+                        <p:column headerText="CATEGORÍA" style="text-align: center" width="150"
+                                  filterBy="#{cat.categoria}" filterMatchMode="contains">
+                            <h:outputText value="#{cat.categoria}"/>
+                        </p:column>
+
+                        <p:column headerText="DESCRIPCIÓN" style="text-align: center">
+                            <h:outputText value="#{cat.desc}"/>
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:contextMenu for="catDeRiesgoTable">
+                        <p:menuitem value="Ver" update="catDeRiesgoDetail" icon="ui-icon-search" oncomplete="PF('catDeRiesgoDialog').show()"/>
+                    </p:contextMenu>
+
+                    <p:dialog header="Información de Activo" widgetVar="catDeRiesgoDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="catDeRiesgoDetail" style="text-align:center;">
+                            <p:panelGrid  columns="2" rendered="#{not empty catDeRiesgoBean.catDeRiesgo}" columnClasses="label,value">
+                                <h:outputText value="Id:" />
+                                <h:outputText value="#{catDeRiesgoBean.catDeRiesgo.idcatderiesgo}" /> 
+
+                                <h:outputText value="CATEGORÍA:" />
+                                <h:outputText value="#{catDeRiesgoBean.catDeRiesgo.categoria}"/>
+
+                                <h:outputText value="DESCRIPCIÓN:" />
+                                <h:outputText value="#{catDeRiesgoBean.catDeRiesgo.desc}" /> 
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Tabla, datos de CATEGORÍAS  -->
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

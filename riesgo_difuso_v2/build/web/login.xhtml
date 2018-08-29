@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Acceso al Sistema</title>
+        <h:outputStylesheet name="./css/login.css"/>
+    </h:head>
+    <h:body>
+        <p:growl id="growl" showDetail="true" life="4000"/>
+        <!-- <h:link value="Entrar al sistema" outcome="admin/index" />-->
+
+        <h:form id="frmPrincipal">
+            <center>                
+                <p:growl id="growl" sticky="true" showDetail="true" life="3000" />
+                <div class="login2">
+                    <p:panel header="Acceso al Sistema" rendered="#{loginBean.visiblePrincipal}">
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <h:outputLabel for="usuario" value="Usuario:" style="text-align: right" />
+                            <p:inputText id="usuario" value="#{loginBean.username}" required="true"
+                                         requiredMessage="Se necesita usuario" label="usuario" />
+
+                            <h:outputLabel for="password" value="Password:" style="text-align: right" />
+                            <p:password id="password" value="#{loginBean.password}" 
+                                        />
+
+                            <f:facet name="footer">
+                                <h:panelGroup style = "display:block; text-align:center">
+                                    <p:commandButton value="Acceder" update=":growl, frmPrincipal"
+                                                     actionListener="#{loginBean.login(event)}"
+                                                     oncomplete="handleLoginRequest(xhr, status, args)"
+                                                     icon="lock-icon"
+                                                     />
+                                </h:panelGroup>
+
+                            </f:facet>  
+                        </h:panelGrid>
+
+                        <p:accordionPanel>
+                            <p:tab title="Información">
+                                <h:panelGrid columns="2" cellpadding="10">
+                                    <p:graphicImage name="/images/big_info.png" width="100" height="100" />
+                                    <h:outputText
+                                        value="Los nuevos usuarios registrados en el sistema
+                                        deben cambiar su contraseña la primera vez que ingresan a este.
+                                        El usuario y contraseña de la persona registrada
+                                        está formada por la primera letra de su nombre de pila
+                                        con su primer apellido (tener presente la tilde 
+                                        si su apellido la tuviese) todo junto y en minúsculas." />
+                                </h:panelGrid>
+                            </p:tab>
+                        </p:accordionPanel>
+                    </p:panel>
+                </div>
+
+                <div class="login2">
+                    <p:panel header="Cambiar contraseña" rendered="#{loginBean.visible}">
+                        <h:panelGrid columns="3" cellpadding="5">
+                            <h:outputLabel for="usuarioUpd" value="Usuario:" style="text-align: right" />
+                            <p:inputText id="usuarioUpd" value="#{loginBean.usuarios.usuario}" required="true"
+                                         requiredMessage="Se necesita usuario" label="usuarioUpd" />
+                            <p:message for="usuarioUpd" />
+
+                            <h:outputLabel for="passwordUpd" value="Password:" style="text-align: right" />
+                            <p:password id="passwordUpd" value="#{loginBean.usuarios.password}"
+                                        required="true" requiredMessage="Ingrese una contraseña"/>
+                            <p:message for="passwordUpd" />
+
+                            <h:outputLabel for="passwordUpd2" value="Confirmar Password:" style="text-align: right" />
+                            <p:password id="passwordUpd2" value="#{loginBean.passwordConfirm}"
+                                        required="true" requiredMessage="Ingrese nuevamente la contraseña"/>
+                            <p:message for="passwordUpd2" />
+
+                            <f:facet name = "footer">
+                                <h:panelGroup style = "display:block; text-align:center">
+                                    <p:commandButton value="Cambiar contraseña" update=":growl, frmPrincipal"
+                                                     actionListener="#{loginBean.changePass()}"
+                                                     oncomplete="handleLoginRequest(xhr, status, args)"
+                                                     icon="lock-icon" 
+                                                     />
+                                </h:panelGroup>
+                            </f:facet>
+                        </h:panelGrid>
+
+                        <p:accordionPanel>
+                            <p:tab title="Información">
+                                <h:panelGrid columns="2" cellpadding="10">
+                                    <p:graphicImage name="/images/keyPurple.png" width="100" height="100" />
+                                    <h:outputText
+                                        value="Usted es un usuario nuevo, por favor,
+                                        cambie de contraseña para mayor seguridad." />
+                                </h:panelGrid>
+                            </p:tab>
+                        </p:accordionPanel>
+                    </p:panel>
+                </div>
+            </center>
+        </h:form>
+
+        <script type="text/javascript">
+            function handleLoginRequest(xhr, status, args) {
+                if (args.validationFailed || !args.loggedIn) {
+                    jQuery('#frmPrincipal').effect('shake', {times: 3}, 350);
+                } else {
+                    location.href = args.ruta;
+                }
+            }
+        </script>
+    </h:body>
+</html>
+

@@ -1,0 +1,299 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+                <h:form id="formBtn2">
+                    <p:commandButton value="Agregar" 
+                                     oncomplete="PF('dialogResponsableIns').show();"
+                                     update=":formResponsableIns"
+                                     styleClass="ui-priority-primary"
+                                     actionListener="#{responsableBean.prepararResponsable()}"
+                                     icon="add-icon">
+                    </p:commandButton>
+                </h:form>
+
+                <p:separator />
+
+                <p:growl id="growl" showDetail="true" life="4000"/>
+
+                <!-- INICIO - Tabla, datos de responsable -->
+                <h:form id="responsablesQry">
+                    <p:dataTable id="responsablesTable" var="resp"
+                                 value="#{responsableBean.listResponsables}"
+                                 emptyMessage="No hay datos"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rows="5"
+                                 rowsPerPageTemplate="5,10,15"
+                                 rowKey="#{resp.idresponsable}"
+                                 selection="#{responsableBean.responsable}"
+                                 selectionMode="single"
+                                 paginatorPosition="bottom">
+                        <f:facet name="header">
+                            Lista de Responsables
+                        </f:facet>
+
+                        <p:column style="text-align: center" width="100">
+                            <f:facet  name="header">
+                                <p:commandButton value="Eliminar" styleClass="ui-priority-primary"
+                                                 icon="delete-icon"
+                                                 actionListener="#{responsableBean.entrar()}"
+                                                 update=":growl"/>
+
+                            </f:facet>
+                            <p:selectManyCheckbox id="selectCheck"
+                                                  valueChangeListener="#{responsableBean.checkResponsables}">
+                                <f:selectItem itemValue="#{resp.idresponsable}" itemLabel="" />
+                            </p:selectManyCheckbox>
+                        </p:column>
+
+                        <p:column headerText="RESPONSABLE" style="text-align: center"
+                                  filterBy="#{resp.nombre}" filterMatchMode="contains">
+                            <h:outputText value="#{resp.nombre}"/>
+                        </p:column>
+
+                        <p:column headerText="DNI" style="text-align: center"
+                                  filterBy="#{resp.dni}" filterMatchMode="contains">
+                            <h:outputText value="#{resp.dni}"/>
+                        </p:column>
+
+                        <p:column headerText="CARGO" style="text-align: center">
+                            <h:outputText value="#{resp.cargo}"/>
+                        </p:column>
+
+                        <p:column headerText="CELULAR" style="text-align: center">
+                            <h:outputText value="#{resp.celular}"/>
+                        </p:column>
+
+                        <p:column headerText="CORREO" style="text-align: center">
+                            <h:outputText value="#{resp.correo}"/>
+                        </p:column>
+
+                        <p:column style="text-align: center" width="100">
+                            <p:commandButton value="Editar" title="Editar" 
+                                             oncomplete="PF('dialogResponsableUpd').show()"
+                                             update=":formResponsableUpd"
+                                             icon="edit-icon">
+                                <f:setPropertyActionListener target="#{responsableBean.responsable}" value="#{resp}" />
+                            </p:commandButton>
+                        </p:column>
+
+                        <p:column style="text-align: center" width="100">
+                            <p:commandButton value="Eliminar" icon="trash-icon" title="Eliminar"                                                
+                                             oncomplete="PF('dialogResponsableDel').show()"
+                                             update=":formResponsableDel">
+                                <f:setPropertyActionListener target="#{responsableBean.responsable}" value="#{resp}" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:contextMenu for="responsablesTable">
+                        <p:menuitem value="Ver" update="responsableDetail" icon="ui-icon-search" oncomplete="PF('responsableDialog').show()"/>
+                    </p:contextMenu>
+
+                    <p:dialog header="Información de Activo" widgetVar="responsableDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="responsableDetail" style="text-align:center;">
+                            <p:panelGrid  columns="2" rendered="#{not empty activoBean.activo}" columnClasses="label,value">
+                                <h:outputText value="Id:" />
+                                <h:outputText value="#{responsableBean.responsable.idresponsable}" /> 
+
+                                <h:outputText value="Responsable:" />
+                                <h:outputText value="#{responsableBean.responsable.nombre}"/>
+
+                                <h:outputText value="DNI:" />
+                                <h:outputText value="#{responsableBean.responsable.dni}"/>
+
+                                <h:outputText value="Cargo:" />
+                                <h:outputText value="#{responsableBean.responsable.cargo}" /> 
+
+                                <h:outputText value="Celular:" />
+                                <h:outputText value="#{responsableBean.responsable.celular}" /> 
+
+                                <h:outputText value="Correo:" />
+                                <h:outputText value="#{responsableBean.responsable.correo}" /> 
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Tabla, datos de responsable -->
+
+                <!-- INICIO - Insertar nuevo responsable -->
+                <h:form id="formResponsableIns">
+                    <p:messages showDetail="true" closable="true"/>
+                    <p:dialog id="dlgResponsableIns" widgetVar="dialogResponsableIns" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Nuevo Registro">
+                        <h:panelGrid id="gridResponsable" columns="4" cellpadding="4">
+                            <p:outputLabel value="Nombre: " for="nombre" />
+                            <p:inputText id="nombre" label="nombre" value="#{responsableBean.responsable.nombre}" 
+                                         required="true" requiredMessage="Por favor, ingrese su nombre"/>
+                            <p:watermark for="nombre" value="Nombre completo *" />
+                            <p:message for="nombre" />
+
+                            <p:outputLabel value="DNI: " for="dni" />
+                            <p:inputText id="dni" label="dni" value="#{responsableBean.responsable.dni}"
+                                         required="true" requiredMessage="Por favor, ingrese su DNI"/>
+                            <p:watermark for="dni" value="Núemto de documento *" />
+                            <p:message for="dni" />
+
+                            <p:outputLabel value="Cargo: " for="cargo" />
+                            <p:inputText id="cargo" label="cargo" value="#{responsableBean.responsable.cargo}"
+                                         required="true" requiredMessage="Por favor, ingrese su cargo"/>
+                            <p:watermark for="cargo" value="Cargo que ostenta *" />
+                            <p:message for="cargo" />
+
+                            <p:outputLabel value="Celular: " for="celular" />
+                            <p:inputText id="celular" label="celular" value="#{responsableBean.responsable.celular}" 
+                                         required="true" requiredMessage="Por favor, ingrese su celular"/>
+                            <p:watermark for="celular" value="Número de celular *" />
+                            <p:message for="celular" />
+
+                            <p:outputLabel value="Correo: " for="correo" />
+                            <p:inputText id="correo" required="true" label="correo"
+                                         requiredMessage="Por favor ingrese su correo"
+                                         validatorMessage="Formato de correo inválido"
+                                         value="#{responsableBean.responsable.correo}">
+
+                                <f:validateRegex
+                                    pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+
+                            </p:inputText>
+                            <p:watermark for="correo" value="Correo electrónico *" />
+                            <p:message for="correo" />
+
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="text-align: center; float: right">
+                            <p:commandButton value="Guardar" ajax="true"
+                                             actionListener="#{responsableBean.responsablesIns()}"
+                                             update=":responsablesQry, gridResponsable, :growl"/>
+                            <p:commandButton value="Cancelar"
+                                             immediate="true"
+                                             
+                                             oncomplete="PF('dialogResponsableIns').hide();"/>
+                        </h:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Insertar nuevo responsable -->
+
+                <!-- INICIO - Eliminar un responsable -->
+                <h:form id="formResponsableDel">
+                    <p:dialog id="dlgActivosDel" widgetVar="dialogResponsableDel" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Eliminar Registro">
+                        <h:panelGrid columns="1" cellpadding="4">
+                            <p:outputLabel value="¿Desea eliminar registro?" style="text-align: center"
+                                           />
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="float: right">
+                            <p:commandButton value="Sí" actionListener="#{responsableBean.responsableDel()}"
+                                             update=":responsablesQry, :growl"
+                                             oncomplete="PF('dialogResponsableDel').hide();"/>
+                            <p:commandButton value="No" oncomplete="PF('dialogResponsableDel').hide();"/>
+                        </h:panelGrid>
+                    </p:dialog>
+
+                </h:form>
+                <!-- FIN - Eliminar un responsable -->
+                
+                <!-- INICIO - Eliminar responsables múltiple -->
+                <h:form id="formActivosDelMult">
+                    <p:dialog id="dlgResponsablesDelMult" widgetVar="dialogResponsablesDelMult" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Eliminar Registros">
+                        <h:panelGrid columns="1" cellpadding="4">
+                            <p:outputLabel value="¿Desea eliminar registros?" style="text-align: center"/>
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="float: right">
+                            <p:commandButton value="Sí" action="#{responsableBean.responsablesDelMult()}"
+                                             update=":responsablesQry, :growl"
+                                             oncomplete="PF('dialogResponsablesDelMult').hide();"/>
+                            <p:commandButton value="No" oncomplete="PF('dialogResponsablesDelMult').hide();"/>
+                        </h:panelGrid>
+                    </p:dialog>
+
+                </h:form>
+                <!-- FIN - Eliminar responsables múltiple -->
+                
+
+                <!-- INICIO - Editar  responsable -->
+                <h:form id="formResponsableUpd">
+                    <p:dialog id="dlgActivoUpd" widgetVar="dialogResponsableUpd" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Editar Registro">
+                        <h:panelGrid id="gridResponsable" columns="4" cellpadding="4">
+                            <p:outputLabel value="Nombre: " for="nombreUpd" />
+                            <p:inputText id="nombreUpd" value="#{responsableBean.responsable.nombre}" 
+                                         required="true" requiredMessage="Por favor, ingrese su nombre"/>
+                            <p:watermark for="nombreUpd" value="Nombre completo *" />
+                            <p:message for="nombreUpd" />
+
+                            <p:outputLabel value="DNI: " for="dniUpd" />
+                            <p:inputText id="dniUpd" value="#{responsableBean.responsable.dni}"
+                                         required="true" requiredMessage="Por favor, ingrese su DNI"/>
+                            <p:watermark for="dniUpd" value="Núemto de documento *" />
+                            <p:message for="dniUpd" />
+
+                            <p:outputLabel value="Cargo: " for="cargoUpd" />
+                            <p:inputText id="cargoUpd" value="#{responsableBean.responsable.cargo}"
+                                         required="true" requiredMessage="Por favor, ingrese su cargo"/>
+                            <p:watermark for="cargoUpd" value="Cargo que ostenta *" />
+                            <p:message for="cargoUpd" />
+
+                            <p:outputLabel value="Celular: " for="celularUpd" />
+                            <p:inputText id="celularUpd" value="#{responsableBean.responsable.celular}" 
+                                         required="true" requiredMessage="Por favor, ingrese su celular"/>
+                            <p:watermark for="celularUpd" value="Número de celular *" />
+                            <p:message for="celularUpd" />
+
+                            <p:outputLabel value="Correo: " for="correoUpd" />
+                            <p:inputText id="correoUpd" required="true"
+                                         requiredMessage="Por favor ingrese su correo"
+                                         validatorMessage="Formato de correo inválido"
+                                         value="#{responsableBean.responsable.correo}">
+
+                                <f:validateRegex
+                                    pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+
+                            </p:inputText>
+                            <p:watermark for="correoUpd" value="Correo electrónico *" />
+                            <p:message for="correoUpd" />
+
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="float: right">
+                            <p:commandButton value="Modificar" 
+                                             actionListener="#{responsableBean.responsableUpd()}" 
+                                             update=":responsablesQry, :growl"
+                                             ajax="true"/>
+                            <p:commandButton value="Cancelar" oncomplete="PF('dialogResponsableUpd').hide();"/>
+                        </h:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Editar responsable -->
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

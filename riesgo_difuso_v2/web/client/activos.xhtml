@@ -1,0 +1,315 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/plantilla/plantillaCliente.xhtml">
+
+            <ui:define name="content">
+
+                <h:form id="formBtn">
+                    <p:commandButton value="Agregar Masivamente" 
+                                     oncomplete="PF('dialogActivosInsMult').show();"
+                                     update=":form"
+                                     styleClass="ui-priority-primary"
+                                     actionListener="#{activoBean.prepararActivo()}"
+                                     icon="add_mult-icon">
+                    </p:commandButton>
+
+                    <p:commandButton value="Agregar" 
+                                     oncomplete="PF('dialogActivosIns').show();"
+                                     update=":formActivosIns"
+                                     styleClass="ui-priority-primary"
+                                     actionListener="#{activoBean.prepararActivo()}"
+                                     icon="add-icon">
+                    </p:commandButton>
+                </h:form>
+
+                <p:separator />
+
+                <p:growl id="growl" showDetail="true" life="4000"/>
+
+                <!-- INICIO - Tabla, datos de activos -->
+                <h:form id="activosQry">
+                    <p:dataTable id="activosTable" var="act"
+                                 value="#{activoBean.listActivos}"
+                                 emptyMessage="No hay datos"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rows="5"
+                                 rowsPerPageTemplate="5,10,15"
+                                 rowKey="#{act.idactivo}"
+                                 selection="#{activoBean.activo}"
+                                 selectionMode="single"
+                                 paginatorPosition="bottom">
+                        <f:facet name="header">
+                            Lista de Activos
+                        </f:facet>
+
+                        <p:column width="100" style="text-align: center" >
+                            <f:facet  name="header" >
+                                <p:commandButton value="Eliminar" styleClass="ui-priority-primary"
+                                                 icon="delete-icon"
+                                                 actionListener="#{activoBean.entrar()}"
+                                                 update=":growl"/>
+
+                            </f:facet>
+                            <p:selectManyCheckbox id="selectCheck"
+                                                  valueChangeListener="#{activoBean.checkActivo}">
+                                <f:selectItem itemValue="#{act.idactivo}" itemLabel="" />
+                            </p:selectManyCheckbox>
+                        </p:column>
+
+                        <p:column headerText="ACTIVO" style="text-align: center"
+                                  filterBy="#{act.nombactivo}" filterMatchMode="contains">
+                            <h:outputText value="#{act.nombactivo}"/>
+                        </p:column>
+
+                        <p:column headerText="TIPO" style="text-align: center"
+                                  filterBy="#{act.tipo}" filterMatchMode="contains">
+                            <h:outputText value="#{act.tipo}"/>
+                        </p:column>
+
+                        <p:column style="text-align: center" width="100">
+                            <p:commandButton value="Editar" title="Editar" 
+                                             oncomplete="PF('dialogActivoUpd').show()"
+                                             update=":formActivoUpd"
+                                             icon="edit-icon">
+                                <f:setPropertyActionListener target="#{activoBean.activo}" value="#{act}" />
+                            </p:commandButton>
+                        </p:column>
+
+                        <p:column style="text-align: center" width="100">
+                            <p:commandButton value="Eliminar" icon="trash-icon" title="Eliminar" 
+                                             oncomplete="PF('dialogActivosDel').show()"
+                                             update=":formActivosDel">
+                                <f:setPropertyActionListener target="#{activoBean.activo}" value="#{act}" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:contextMenu for="activosTable">
+                        <p:menuitem value="Ver" update="activoDetail" icon="ui-icon-search" oncomplete="PF('activoDialog').show()"/>
+                    </p:contextMenu>
+
+                    <p:dialog header="Información de Activo" widgetVar="activoDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="activoDetail" style="text-align:center;">
+                            <p:panelGrid  columns="2" rendered="#{not empty activoBean.activo}" columnClasses="label,value">
+                                <h:outputText value="Id:" />
+                                <h:outputText value="#{activoBean.activo.idactivo}" /> 
+
+                                <h:outputText value="ACTIVO:" />
+                                <h:outputText value="#{activoBean.activo.nombactivo}"/>
+
+                                <h:outputText value="TIPO DE ACTIVO:" />
+                                <h:outputText value="#{activoBean.activo.tipo}" /> 
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Tabla, datos de activos -->
+
+                <!-- INICIO - Eliminar activo masivamente -->
+                <h:form id="formActivosDelMult">
+                    <p:dialog id="dlgActivosDelMult" widgetVar="dialogActivosDelMult" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Eliminar Registros">
+                        <h:panelGrid columns="1" cellpadding="4">
+                            <p:outputLabel value="¿Desea eliminar registros?" style="text-align: center"/>
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="float: right">
+                            <p:commandButton value="Sí" action="#{activoBean.activosDelMult()}"
+                                             update=":activosQry, :growl"
+                                             oncomplete="PF('dialogActivosDelMult').hide();"/>
+                            <p:commandButton value="No" oncomplete="PF('dialogActivosDelMult').hide();"/>
+                        </h:panelGrid>
+                    </p:dialog>
+
+                </h:form>
+                <!-- FIN - Eliminar activo masivamente -->
+
+                <!-- INICIO - Insertar nuevo activo -->
+                <h:form id="formActivosIns">
+                    <p:messages showDetail="true" closable="true"/>
+                    <p:dialog id="dlgActivosIns" widgetVar="dialogActivosIns" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Nuevo Registro">
+                        <h:panelGrid id="gridActivo" columns="3" cellpadding="4">
+                            <p:outputLabel value="Activo:" for="activo" />
+                            <p:inputText id="activo" value="#{activoBean.activo.nombactivo}"
+                                         label="activo" 
+                                         required="true" requiredMessage="Ingrese activo"/>
+                            <p:message for="activo" />
+
+                            <p:outputLabel value="Tipo:" for="tipo" />
+                            <p:selectOneMenu id="tipo" value="#{activoBean.activo.tipo}"
+                                             required="true" requiredMessage="Ingrese tipo">
+                                <f:selectItem itemLabel="[...Seleccione...]" itemValue="" />
+                                <f:selectItem itemLabel="HARDWARE" itemValue="HARDWARE" />
+                                <f:selectItem itemLabel="SOFTWARE" itemValue="SOFTWARE" />                                
+                            </p:selectOneMenu>
+                            <p:message for="tipo" />
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="text-align: center; float: right">
+                            <p:commandButton value="Guardar" ajax="true"
+                                             actionListener="#{activoBean.activosIns()}"
+                                             update=":activosQry, gridActivo, :growl"/>
+                            <p:commandButton value="Cancelar"
+                                             immediate="true"
+                                             
+                                             oncomplete="PF('dialogActivosIns').hide();"/>
+                        </h:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Insertar nuevo activo -->
+
+                <!-- INICIO - Eliminar activo -->
+                <h:form id="formActivosDel">
+                    <p:dialog id="dlgActivosDel" widgetVar="dialogActivosDel" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Eliminar Registro">
+                        <h:panelGrid columns="1" cellpadding="4">
+                            <p:outputLabel value="¿Desea eliminar registro?" style="text-align: center"/>
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="float: right">
+                            <p:commandButton value="Sí" actionListener="#{activoBean.activosDel()}"
+                                             update=":activosQry, :growl"
+                                             oncomplete="PF('dialogActivosDel').hide();"/>
+                            <p:commandButton value="No" oncomplete="PF('dialogActivosDel').hide();"/>
+                        </h:panelGrid>
+                    </p:dialog>
+
+                </h:form>
+                <!-- FIN - Eliminar activo -->
+
+                <!-- INICIO - Editar  activo -->
+                <h:form id="formActivoUpd">
+                    <p:dialog id="dlgActivoUpd" widgetVar="dialogActivoUpd" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Editar Registro">
+                        <h:panelGrid id="gridActivoUpd" columns="3" cellpadding="4">
+                            <p:outputLabel value="Activo:" for="activo" />
+                            <p:inputText id="activo" value="#{activoBean.activo.nombactivo}"
+                                         label="activo" 
+                                         required="true" requiredMessage="Ingrese activo"/>
+                            <p:message for="activo" />
+
+                            <p:outputLabel value="Tipo:" for="tipo" />
+
+                            <p:selectOneMenu id="tipo" value="#{activoBean.activo.tipo}"
+                                             required="true" requiredMessage="Ingrese tipo">
+                                <f:selectItem itemLabel="#{activoBean.activo.tipo}" itemValue="#{activoBean.activo.tipo}" />
+                                <c:choose>
+                                    <c:when test="#{activoBean.activo.tipo.equalsIgnoreCase('SOFTWARE')}">
+                                        <f:selectItem itemLabel="HARDWARE" itemValue="HARDWARE" />   
+                                    </c:when>
+                                    <c:otherwise>
+                                        <f:selectItem itemLabel="SOFTWARE" itemValue="SOFTWARE" />    
+                                    </c:otherwise>
+                                </c:choose>
+                            </p:selectOneMenu>
+
+                            <p:message for="tipo" />
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="float: right">
+                            <p:commandButton value="Modificar" 
+                                             actionListener="#{activoBean.activoUpd()}" 
+                                             update=":activosQry, :growl"
+                                             ajax="true"/>
+                            <p:commandButton value="Cancelar" oncomplete="PF('dialogActivoUpd').hide();"/>
+                        </h:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Editar activo -->
+
+                <!-- INICIO - INSERTAR MÚLTIPLE-->
+                <h:form id="form">
+                    <p:growl id="msgs" showDetail="false" />
+                    <p:dialog id="dlgActivosDelMult" widgetVar="dialogActivosInsMult" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              width="440" height="300" header="Insertar activos">
+                        <p:panel style="margin-bottom:20px;">
+                            <h:panelGrid columns="2" cellpadding="5" >
+                                <h:outputLabel value="Activo" for="txt_activo"></h:outputLabel>
+                                <p:inputText id="txt_activo" value="#{activoBean.activo.nombactivo}" required="true"
+                                             requiredMessage="Se debe agregar activo" style="width: 300px"/>
+
+                                <h:outputLabel value="Tipo" for="txt_tipo"></h:outputLabel>
+                                <p:selectOneMenu id="txt_tipo" value="#{activoBean.activo.tipo}"
+                                                 required="true" requiredMessage="Ingrese tipo">
+                                    <f:selectItem itemLabel="[...Seleccione...]" itemValue="" />
+                                    <f:selectItem itemLabel="HARDWARE" itemValue="HARDWARE" />
+                                    <f:selectItem itemLabel="SOFTWARE" itemValue="SOFTWARE" />                                
+                                </p:selectOneMenu>
+
+                                <f:facet name = "footer">
+                                    <h:panelGroup style = "display:block; text-align:center">
+                                        <p:commandButton id="btn_add" style="width: 100%" value="Agregar" update="act @parent" action="#{activoBean.reinit()}" >
+                                            <p:collector value="#{activoBean.activo}" addTo="#{activoBean.listActivoIns}" unique="true"/>
+                                        </p:commandButton>
+                                    </h:panelGroup>
+                                </f:facet>
+                            </h:panelGrid>
+                        </p:panel>
+
+                        <p:outputPanel id="act">
+                            <p:dataTable value="#{activoBean.listActivoIns}" var="ac" id="actTable"
+                                         emptyMessage="No hay datos para agregar">
+
+                                <p:column headerText="Activo">
+                                    <h:outputText value="#{ac.nombactivo}" />
+                                </p:column>
+
+                                <p:column headerText="Tipo">
+                                    <f:facet name="header">
+                                        <h:outputText value="Tipo" />
+                                    </f:facet>
+                                    <h:outputText value="#{ac.tipo}" />
+                                </p:column>
+
+                                <p:column headerText="Acción">
+                                    <p:commandLink value="Remover" update=":form:act" process=":form:act">
+                                        <p:collector value="#{ac}" removeFrom="#{activoBean.listActivoIns}" unique="true"/>
+                                    </p:commandLink>
+                                </p:column>
+
+                            </p:dataTable>
+
+                        </p:outputPanel>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="text-align: center; float: right">
+                            <p:commandButton value="Enviar Datos" ajax="true"
+                                             actionListener="#{activoBean.grabarMultiple()}"
+                                             update=":activosQry, :growl"/>
+                        </h:panelGrid>
+                    </p:dialog>
+
+                </h:form>
+                <!-- FIN - INSERTAR MÚLTIPLE-->
+
+
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

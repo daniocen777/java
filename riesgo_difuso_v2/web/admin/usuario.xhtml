@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+                <p:growl id="growl" showDetail="true" life="4000"/>
+                <p:tabView cache="true" effect="fold">
+
+                    <p:tab id="tab" title="Lista de Usuarios">
+                        <!-- INICIO - Tabla, datos de usuarios -->
+                        <h:form id="usuariosQry">
+
+                            <p:dataTable id="userTable" var="u"
+                                         value="#{usuariosBean.listaUsuarios}"
+                                         emptyMessage="No hay datos"                                         
+                                         paginator="true"
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rows="5"
+                                         rowsPerPageTemplate="5,10,15"
+                                         rowKey="#{u.idusuario}"
+                                         selection="#{usuariosBean.usuarios}"
+                                         selectionMode="single"
+                                         paginatorPosition="bottom"
+                                         >
+                                <f:facet name="header">
+                                    Lista de Usuarios
+                                </f:facet>
+
+                                <p:column headerText="NOMBRE" style="text-align: center"
+                                          filterBy="#{u.apellidos}" filterMatchMode="contains">
+                                    <h:outputText value="#{u.apellidos}  #{u.nombres}"/>
+                                </p:column>
+
+                                <p:column headerText="USUARIO" style="text-align: center">
+                                    <h:outputText value="#{u.usuario}"/>
+                                </p:column>
+
+                                <p:column headerText="AUTORIZACIÓN" style="text-align: center"
+                                          filterBy="#{u.autorizacion}" filterMatchMode="contains">
+                                    <h:outputText value="#{u.autorizacion}"/>
+                                </p:column>
+                            </p:dataTable>
+
+                            <p:contextMenu for="userTable">
+                                <p:menuitem value="Ver" update="usuarioDetail" icon="ui-icon-search" oncomplete="PF('usuarioDialog').show()"/>
+                            </p:contextMenu>
+
+                            <p:dialog header="Información de Activo" widgetVar="usuarioDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                                <p:outputPanel id="usuarioDetail" style="text-align:center;">
+                                    <p:panelGrid  columns="2" rendered="#{not empty usuariosBean.usuarios}" columnClasses="label,value">
+                                        <h:outputText value="Id Usuario:" />
+                                        <h:outputText value="#{usuariosBean.usuarios.idusuario}" /> 
+
+                                        <h:outputText value="Nombre completo:" />
+                                        <h:outputText value="#{usuariosBean.usuarios.nombres} #{usuariosBean.usuarios.apellidos}"/>
+
+                                        <h:outputText value="Usuario:" />
+                                        <h:outputText value="#{usuariosBean.usuarios.usuario}" /> 
+
+                                        <h:outputText value="Autorización:" />
+                                        <h:outputText value="#{usuariosBean.usuarios.autorizacion}" /> 
+                                    </p:panelGrid>
+                                </p:outputPanel>
+                            </p:dialog>
+                        </h:form>
+                        <!-- FIN - Tabla, datos de usuarios -->
+                    </p:tab>
+
+                    <p:tab id="tab2" title="Agregar Usuario">
+
+                        <h:form>
+                            <p:messages showDetail="true" closable="true"/>
+
+                            <h:panelGrid id="gridUsuario" columns="3" cellpadding="5">
+
+                                <p:outputLabel value="Nombres" for="nombre" />
+                                <p:inputText id="nombre" value="#{usuariosBean.usuarios.nombres}"
+                                             required="true"
+                                             requiredMessage="Debe ingresar nombres"/>
+                                <p:message for="nombre" />
+
+                                <p:outputLabel value="Apellidos" for="apellido" />
+                                <p:inputText id="apellido" value="#{usuariosBean.usuarios.apellidos}"
+                                             required="true"
+                                             requiredMessage="Debe ingresar un Apellidos"/>
+                                <p:message for="apellido" />
+
+                                <p:outputLabel value="Autorización" for="auth" />
+                                <p:selectOneMenu id="auth" required="true" value="#{usuariosBean.usuarios.autorizacion}"
+                                                 requiredMessage="Ingrese autorización">
+                                    <f:selectItem itemLabel="[.. Seleccione ..]" itemValue="" />
+                                    <f:selectItem itemLabel="Administrador" itemValue="ADMIN" />
+                                    <f:selectItem itemLabel="Cliente" itemValue="CLIENT" />
+                                </p:selectOneMenu>
+                                <p:message for="auth" />
+
+                                <h:panelGrid columns="2" cellpadding="4" style="text-align: center; float: right">
+                                    <p:commandButton value="Enviar Datos" ajax="true"
+                                                     actionListener="#{usuariosBean.usuariosIns()}"
+                                                     update="@([id$=userTable]), gridUsuario, :growl"/>
+                                </h:panelGrid>
+
+
+                            </h:panelGrid>
+                        </h:form>
+
+
+                    </p:tab>
+
+                    <p:tab title="Cambiar Contraseña">
+
+                    </p:tab>
+                </p:tabView>                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

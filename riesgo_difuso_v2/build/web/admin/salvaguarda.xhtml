@@ -1,0 +1,316 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+                <h:form id="formBtn">
+                    <p:commandButton value="Agregar" 
+                                     oncomplete="PF('dialogSalvaguardaIns').show();"
+                                     update=":formSalvaguardaIns, :salvaguardaQry:salvaguardaTable"
+                                     styleClass="ui-priority-primary"
+                                     actionListener="#{salvaguardaBean.preparar()}"
+                                     icon="add-icon">
+                    </p:commandButton>
+                </h:form>
+
+                <p:separator />
+
+                <p:growl id="growl" showDetail="true" life="4000"/>
+
+                <!-- INICIO - Tabla, datos de salvaguarda -->
+                <h:form id="salvaguardaQry">
+                    <p:dataTable id="salvaguardaTable" var="salv"
+                                 value="#{salvaguardaBean.listSalvaguarda}"
+                                 emptyMessage="No hay datos"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rows="5"
+                                 rowsPerPageTemplate="5,10,15"
+                                 rowKey="#{salv.idsalvaguarda}"
+                                 selection="#{salvaguardaBean.salvaguarda}"
+                                 selectionMode="single"
+                                 paginatorPosition="bottom">
+                        <f:facet name="header">
+                            Lista de Salvagurdas
+                        </f:facet>
+
+                        <p:column style="text-align: center" width="100">
+                            <f:facet  name="header">
+                                <p:commandButton value="Eliminar" styleClass="ui-priority-primary"
+                                                 icon="delete-icon"
+                                                 actionListener="#{salvaguardaBean.entrar()}"
+                                                 update=":growl"/>
+
+                            </f:facet>
+                            <p:selectManyCheckbox id="selectCheck"
+                                                  valueChangeListener="#{salvaguardaBean.checkSalvaguardas}">
+                                <f:selectItem itemValue="#{salv.idsalvaguarda}" itemLabel="" />
+                            </p:selectManyCheckbox>
+                        </p:column>
+
+                        <p:column headerText="ACT. ESPEC." style="text-align: center" width="150"
+                                  filterBy="#{salv.actEspec.nombactespec}" filterMatchMode="contains">
+                            <h:outputText value="#{salv.actEspec.nombactespec}"/>
+                        </p:column>
+
+                        <p:column headerText="AMENAZA" style="text-align: center" width="100">
+                            <h:outputText value="#{salv.amenaza.amenaza}"/>
+                        </p:column>
+
+                        <p:column headerText="CONSECUENCIA" style="text-align: center">
+                            <h:outputText value="#{salv.amenaza.consecuencia}"/>
+                        </p:column>
+
+                        <p:column headerText="RESPONSABLE" style="text-align: center" width="150"
+                                  filterBy="#{salv.responsable.nombre}" filterMatchMode="contains">
+                            <h:outputText value="#{salv.responsable.nombre}"/>
+                        </p:column>
+
+                        <p:column headerText="CONTROL" style="text-align: center">
+                            <h:outputText value="#{salv.control}"/>
+                        </p:column>
+
+                        <p:column style="text-align: center" width="45">
+                            <p:commandButton title="Editar" 
+                                             oncomplete="PF('dialogSalvaguardaUpd').show()"
+                                             update=":formSalvaguardaUpd"
+                                             icon="edit-icon">
+                                <f:setPropertyActionListener target="#{salvaguardaBean.salvaguarda}" value="#{salv}" />
+                            </p:commandButton>
+                        </p:column>
+
+                        <p:column style="text-align: center" width="45">
+                            <p:commandButton icon="trash-icon" title="Eliminar" 
+                                             oncomplete="PF('dialogSalvaguardaDel').show()"
+                                             update=":formSalvaguardaDel">
+                                <f:setPropertyActionListener target="#{salvaguardaBean.salvaguarda}" value="#{salv}" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:contextMenu for="salvaguardaTable">
+                        <p:menuitem value="Ver" update="salvaguardaDetail" icon="ui-icon-search" oncomplete="PF('salvaguardaDialog').show()"/>
+                    </p:contextMenu>
+
+                    <p:dialog header="Información de Salvaguarda" widgetVar="salvaguardaDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="salvaguardaDetail" style="text-align:center;">
+                            <p:panelGrid  columns="2" rendered="#{not empty salvaguardaBean.salvaguarda}" columnClasses="label,value">
+                                <h:outputText value="Id Salv.:" />
+                                <h:outputText value="#{salvaguardaBean.salvaguarda.idsalvaguarda}" /> 
+
+                                <h:outputText value="Id Act. Espec.:" />
+                                <h:outputText value="#{salvaguardaBean.salvaguarda.actEspec.idactespec}"/>
+
+                                <h:outputText value="Act. Espec.:" />
+                                <h:outputText value="#{salvaguardaBean.salvaguarda.actEspec.nombactespec}" /> 
+
+                                <h:outputText value="Id Amenaza" />
+                                <h:outputText value="#{salvaguardaBean.salvaguarda.amenaza.idamenaza}" /> 
+
+                                <h:outputText value="Amenaza" />
+                                <h:outputText value="#{salvaguardaBean.salvaguarda.amenaza.amenaza}" /> 
+
+                                <h:outputText value="Consecuencia" />
+                                <h:outputText value="#{salvaguardaBean.salvaguarda.amenaza.consecuencia}" /> 
+
+                                <h:outputText value="Id Responsable" />
+                                <h:outputText value="#{salvaguardaBean.salvaguarda.responsable.idresponsable}" /> 
+
+                                <h:outputText value="Responsable" />
+                                <h:outputText value="#{salvaguardaBean.salvaguarda.responsable.nombre}" /> 
+
+                                <h:outputText value="Control" />
+                                <h:outputText value="#{salvaguardaBean.salvaguarda.control}" /> 
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Tabla, datos de salvaguardas -->
+
+                <!-- INICIO - Eliminar salvaguarda masivamente -->
+                <h:form id="formSalvaguardaDelMult">
+                    <p:dialog id="dlgSalvaguardaDelMult" widgetVar="dialogSalvaguardaDelMult" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Eliminar Registros">
+                        <h:panelGrid columns="1" cellpadding="4">
+                            <p:outputLabel value="¿Desea eliminar registros?" style="text-align: center"/>
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="float: right">
+                            <p:commandButton value="Sí" action="#{salvaguardaBean.salvaguardaDelMult()}"
+                                             update=":salvaguardaQry, :growl"
+                                             oncomplete="PF('dialogSalvaguardaDelMult').hide();"/>
+                            <p:commandButton value="No" oncomplete="PF('dialogSalvaguardaDelMult').hide();"/>
+                        </h:panelGrid>
+                    </p:dialog>
+
+                </h:form>
+                <!-- FIN - Eliminar salvaguarda masivamente -->
+
+                <!-- INICIO - Insertar salvaguarda -->
+                <h:form id="formSalvaguardaIns" >
+                    <p:dialog id="dlgSalvaguardaIns" widgetVar="dialogSalvaguardaIns" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Nuevo Registro">
+
+                        <h:panelGrid id="gridSalvaguarda" columns="3" cellpadding="4">
+                            <p:outputLabel value="Activo" for="activoCbo"/>
+                            <p:selectOneMenu id="activoCbo" value="#{salvaguardaBean.idActEspec}"
+                                             filter="true" filterMatchMode="startsWith" style="width: 447px"
+                                             effect="fold" required="true" requiredMessage="Debe ingresar activo">
+                                <f:selectItem itemLabel="[.. Seleccione ..]" itemValue="" />
+                                <f:selectItems value="#{salvaguardaBean.actEspecCbo}" />
+                            </p:selectOneMenu>
+                            <p:message for="activoCbo" />
+
+                            <p:outputLabel value="Amenaza" for="amenazaCbo" />                            
+                            <p:selectOneMenu id="amenazaCbo" value="#{salvaguardaBean.idAmenaza}"
+                                             filter="true" filterMatchMode="startsWith" style="width: 447px"
+                                             effect="fold" required="true" requiredMessage="Debe ingresar amenaza">
+                                <f:selectItem itemLabel="[.. Seleccione ..]" itemValue="" />
+                                <f:selectItems value="#{salvaguardaBean.amenazasCbo}" />
+                            </p:selectOneMenu>
+                            <p:message for="amenazaCbo" />
+
+                            <p:outputLabel value="Responsable" for="resp" />
+                            <p:selectOneMenu id="resp" value="#{salvaguardaBean.idResponsable}"
+                                             filter="true" filterMatchMode="startsWith" style="width: 447px"
+                                             effect="fold" required="true" requiredMessage="Debe haber un responsable">
+                                <f:selectItem itemLabel="[... Seleccione ...]" itemValue="" />
+                                <f:selectItems value="#{salvaguardaBean.responsablesCbo}" />
+                            </p:selectOneMenu>
+                            <p:message for="resp" />
+
+                            <p:outputLabel value="Control" for="txt_control"/>
+                            <p:inputTextarea id="txt_control" value="#{salvaguardaBean.salvaguarda.control}"
+                                             rows="6" cols="50" counter="display"
+                                             maxlength="150" counterTemplate="{0} caracteres restantes." 
+                                             autoResize="false"  />
+                            <h:outputText id="display" />
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="text-align: center; float: right">
+                            <p:commandButton value="Guardar" ajax="true"
+                                             actionListener="#{salvaguardaBean.salvaguerdaIns()}"
+                                             update=":salvaguardaQry:salvaguardaTable, gridSalvaguarda, :growl, activoCbo, amenazaCbo"
+                                             />
+                            <p:commandButton value="Cancelar"
+                                             immediate="true"
+
+                                             oncomplete="PF('dialogSalvaguardaIns').hide();"
+                                             />
+                        </h:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Insertar salvaguarda -->
+
+                <!-- INICIO - Eliminar salvaguarda -->
+                <h:form id="formSalvaguardaDel">
+                    <p:dialog id="dlgSalvaguardaDel" widgetVar="dialogSalvaguardaDel" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Eliminar Registro">
+
+                        <h:panelGrid columns="1" cellpadding="4">
+                            <p:outputLabel value="¿Desea eliminar registro?" style="text-align: center"/>
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="float: right">
+                            <p:commandButton value="Sí" actionListener="#{salvaguardaBean.salvaguardaDel()}"
+                                             update=":salvaguardaQry, :growl"
+                                             oncomplete="PF('dialogSalvaguardaDel').hide();"/>
+                            <p:commandButton value="No" oncomplete="PF('dialogSalvaguardaDel').hide();"/>
+                        </h:panelGrid>
+
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Eliminar activo salvaguarda -->
+
+                <!-- INICIO - Editar salvaguarda -->
+                <h:form id="formSalvaguardaUpd" >
+                    <p:dialog id="dlgSalvaguardaUpd" widgetVar="dialogSalvaguardaUpd" resizable="false"
+                              showEffect="explode" hideEffect="explode" modal="true"
+                              header="Nuevo Registro">
+
+                        <h:panelGrid id="gridSalvaguarda" columns="3" cellpadding="4">
+                            <p:outputLabel value="Activo" for="activoCbo"/>
+                            <p:selectOneMenu id="activoCbo" value="#{salvaguardaBean.idActEspec}"
+                                             filter="true" filterMatchMode="startsWith" style="width: 447px"
+                                             effect="fold">
+                                <f:selectItem itemLabel="#{salvaguardaBean.salvaguarda.actEspec.nombactespec}" itemValue="#{salvaguardaBean.salvaguarda.actEspec.idactespec}" />
+                                <f:selectItems value="#{salvaguardaBean.actEspecCbo}" />
+                            </p:selectOneMenu>
+                            <p:message for="activoCbo" />
+
+                            <p:outputLabel value="Amenaza" for="amenazaCbo" />                            
+                            <p:selectOneMenu id="amenazaCbo" value="#{salvaguardaBean.idAmenaza}"
+                                             filter="true" filterMatchMode="startsWith" style="width: 447px"
+                                             effect="fold">
+                                <f:selectItem itemLabel="#{salvaguardaBean.salvaguarda.amenaza.amenaza}" itemValue="#{salvaguardaBean.salvaguarda.amenaza.idamenaza}" />
+                                <f:selectItems value="#{salvaguardaBean.amenazasCbo}" />
+                            </p:selectOneMenu>
+                            <p:message for="amenazaCbo" />
+
+                            <p:outputLabel value="Responsable" for="resp" />
+                            <p:selectOneMenu id="resp" value="#{salvaguardaBean.idResponsable}"
+                                             filter="true" filterMatchMode="startsWith" style="width: 447px"
+                                             effect="fold">
+                                <f:selectItem itemLabel="#{salvaguardaBean.salvaguarda.responsable.nombre}" itemValue="#{salvaguardaBean.salvaguarda.responsable.idresponsable}" />
+                                <f:selectItems value="#{salvaguardaBean.responsablesCbo}" />
+                            </p:selectOneMenu>
+                            <p:message for="resp" />
+
+                            <p:outputLabel value="Control" for="txt_control"/>
+                            <p:inputTextarea id="txt_control" value="#{salvaguardaBean.salvaguarda.control}"
+                                             rows="6" cols="50"
+                                             maxlength="150" 
+                                             />
+
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <h:panelGrid columns="2" cellpadding="4" style="text-align: center; float: right">
+                            <p:commandButton value="Guardar" ajax="true"
+                                             actionListener="#{salvaguardaBean.salvaguardaUpd()}"
+                                             update=":salvaguardaQry, gridSalvaguarda, :growl, activoCbo, amenazaCbo, txt_control"
+                                             />
+                            <p:commandButton value="Cancelar"
+                                             immediate="true"
+
+                                             oncomplete="PF('dialogSalvaguardaUpd').hide();"
+                                             />
+                        </h:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <!-- FIN - Editar salvaguarda -->
+
+            </ui:define>
+
+        </ui:composition>
+        <!-- 
+                            <p:pickList id="resp" value="{salvaguardaBean.responsablePickList}" var="act" effect="bounce"
+                                        itemValue="{act.idresponsable}" itemLabel="{act.nombre}" 
+                                        showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" >
+
+                                <f:facet name="sourceCaption">Disponibles</f:facet>
+                                <f:facet name="targetCaption">Agregados</f:facet>
+
+                            </p:pickList>
+                            <p:message for="resp" />
+        -->
+    </body>
+</html>

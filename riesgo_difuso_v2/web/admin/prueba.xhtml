@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+
+                <h:form>
+                    <p:growl id="growl" showDetail="true" life="4000"/>
+
+
+                    <p:pickList id="PojoPickList" value="#{pruebaBean.activos}" var="act" effect="bounce"
+                                itemValue="#{act.idactivo}" itemLabel="#{act.nombactivo}" 
+                                showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" >
+
+                        <f:facet name="sourceCaption">Available</f:facet>
+                        <f:facet name="targetCaption">Starting</f:facet>
+
+                    </p:pickList>
+                    <p:commandButton id="citySubmit" value="Submit" 
+                                     actionListener="#{pruebaBean.mostrar()}" style="margin-top:5px"
+                                     update="growl"
+                                      />
+
+
+                </h:form>
+
+
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/riesgo_difuso_v2">
+    
+     <!-- Seguridad 
+    <Realm className="org.apache.catalina.realm.JDBCRealm"
+           connectionName="root" connectionPassword=""
+           connectionURL="jdbc:mysql://localhost:3306/risk"
+           driverName="com.mysql.jdbc.Driver"
+           roleNameCol="autorizacion"
+           userCredCol="password"
+           userNameCol="usuario"
+           userRoleTable="usuarios"
+           userTable="usuarios">
+    </Realm>
+    -->
+    
+</Context>
+
