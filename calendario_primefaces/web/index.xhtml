@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <p:growl id="growl" showDetail="true" life="4000"/>
+        <h1>CALENDARIO</h1>
+        <h:form id="form">
+            <p:panelGrid columns="3">
+                <p:outputLabel value="Fecha" for="fecha" />
+                <p:calendar id="fecha" value="#{calendarBean.calendar.fecha}" locale="es"
+                            mask="true" pattern="dd-MM-yyyy" navigator="true"
+                            required="true" requiredMessage="Requiere fecha"/>
+            </p:panelGrid>
+
+            <h:panelGrid columns="2">
+                <p:commandButton value="Guardar" ajax="true"
+                                 actionListener="#{calendarBean.agregar()}"
+                                 update=":activosQry:activosTable"/>
+            </h:panelGrid>
+        </h:form>
+
+        <!-- INICIO - Tabla, datos de activos -->
+        <h:form id="activosQry">
+            <p:dataTable id="activosTable" var="act"
+                         value="#{calendarBean.list}"
+                         emptyMessage="No hay datos"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rows="5"
+                         rowsPerPageTemplate="5,10,15"
+                         paginatorPosition="bottom">
+                <f:facet name="header">
+                    Lista de Activos
+                </f:facet>
+
+                <p:column headerText="ID" style="text-align: center">
+                    <h:outputText value="#{act.id}"/>
+                </p:column>
+
+                <p:column headerText="TIPO" style="text-align: center">
+                    <h:outputText value="#{act.fecha}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </p:column>
+            </p:dataTable>
+
+        </h:form>
+        <!-- FIN - Tabla, datos de activos -->
+    </h:body>
+</html>
+
